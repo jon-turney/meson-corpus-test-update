@@ -1,0 +1,20 @@
+language: python
+python: 3.6
+
+cache:
+  apt: true
+
+install:
+  # install meson from git master
+  - pip3 install git+https://github.com/mesonbuild/meson.git
+  - meson --version
+  # ninja in trusty is too old
+  - wget -c https://github.com/ninja-build/ninja/releases/download/v1.8.2/ninja-linux.zip
+  - unzip ninja-linux.zip -d ${HOME}/bin
+  - PATH=${HOME}/bin:$PATH
+  - ninja --version
+
+script:
+  - git clone --depth=50 ${REPO} ${NAME}
+  - cd ${NAME}
+  - meson _build
