@@ -15,6 +15,6 @@ install:
   - ninja --version
 
 script:
-  - git clone --depth=50 ${REPO} ${NAME}
+  - git clone --depth=50 --branch ${BRANCH} ${REPO} ${NAME}
   - cd ${NAME}
   - meson _build

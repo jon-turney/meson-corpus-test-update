@@ -10,7 +10,7 @@ import sys
 import yaml
 import urllib.request
 
-Project = collections.namedtuple('Project', ['name', 'repo', 'builddep'])
+Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'builddep'])
 
 builddep = {
     'aqemu': ['qtbase5-dev', 'libvncserver-dev'],
@@ -27,10 +27,17 @@ builddep = {
     'gnome_twitch': ['libgtk-3-dev'],
     'gtkdapp': ['gdc', 'libgtkd-3-dev'],
     'hardcode-tray': ['libgirepository1.0-dev', 'libgtk-3-dev'],
-    'hexchat': ['libproxy-dev', 'libcanberra-dev', 'libdbus-glib-1-dev'],
+    'hexchat': ['libproxy-dev', 'libcanberra-dev', 'libdbus-glib-1-dev', 'libgtk2.0-dev', 'libnotify-dev', 'libluajit-5.1-dev'],
     'libdrm': ['libpciaccess-dev'],
+    'libhttpseverywhere': ['valac', 'libjson-glib-dev', 'libsoup2.4-dev'],
+    'lightdm-webkit2-greeter': ['libdbus-glib-1-dev', 'liblightdm-gobject-1-dev'],
+    'kiwix_libraries': ['libzim-dev'],
+    'miraclecast': ['libudev-dev', 'libsystemd-dev'],
+    'nemo': ['libgtk-3-dev', 'libgirepository1.0-dev'],
     'outlier': ['libxml2-dev'],
-    'orc' : [],
+    'orc': [],
+    'pango': ['libfribidi-dev'],
+    'pipewire': ['libdbus-1-dev'],
 }
 
 url_remap = {
@@ -40,6 +47,9 @@ url_remap = {
     'https://ebassi.github.io/graphene/': 'git://github.com/ebassi/graphene',
     'https://mail.gnome.org/archives/grilo-list/2017-February/msg00000.html': 'https://git.gnome.org/browse/grilo',
     'https://github.com/grindhold/libhttpseverywhere': 'https://git.gnome.org/browse/libhttpseverywhere',  # moved
+    'https://www.mesa3d.org/': 'git://anongit.freedesktop.org/mesa/mesa',
+    'https://git.gnome.org/browse/nautilus/commit/?id=ed5652c89ac0654df2e82b54b00b27d51c825465': 'https://gitlab.gnome.org/GNOME/nautilus.git',
+    'https://pipewire.org/': 'https://github.com/PipeWire/pipewire.git',
 }
 
 blacklist = [
@@ -62,13 +72,21 @@ blacklist = [
     'igt', # needs a later libdrm than in trusty
     'json-glib', # needs later gobject than in trusty
     'libgit2-glib', # needs a later glib than in trusty
+    'mesa', # needs later libdrm than in trusty
+    'pango', # needs later fribidi than in trusty
 ]
 
 # broken by PR #3035
 blacklist += [
     'dbus-broker',
     'gnome_recipes',
+    'nautilus',
 ]
+
+# if we don't want to checkout master, use a branch, tag or hash
+branch_overrides = {
+    'lightdm-webkit2-greeter': 'stable',
+}
 
 # fetch project list, extract projects
 project_list_url = "https://raw.githubusercontent.com/mesonbuild/meson/master/docs/markdown/Users.md"
@@ -89,20 +107,21 @@ for l in content.splitlines():
         url = url_remap.get(url, url)
 
         # workaround freedesktop.org CA not in trusty (?)
-        url = url.replace('https://cgit.freedesktop.org/', 'git://anongit.freedesktop.org/')
+        url = re.sub(r'http(s|)://cgit.freedesktop.org/', r'git://anongit.freedesktop.org/', url)
 
         projects.append(Project(name = name,
                                 repo = url,
-                                builddep = builddep.get(name, [])))
+                                builddep = builddep.get(name, []),
+                                branch = branch_overrides.get(name, 'master')))
 
 # XXX: truncate
-projects = projects[:18]
+projects = projects[10:]
 
 # read template.yaml and insert project list into build matrix
 with open("template.yaml", 'r') as f:
     output = yaml.load(f)
 
-matrix = [{'env': ['NAME="%s"' % p.name, 'REPO=%s' % p.repo],
+matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch],
            'addons': { 'apt': {'packages': p.builddep + ['ninja-build'] }}} for p in projects]
 
 output['matrix'] = {'include': matrix}
