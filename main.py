@@ -13,22 +13,22 @@ import urllib.request
 Project = collections.namedtuple('Project', ['name', 'repo', 'builddep'])
 
 builddep = {
-    'AQEMU': ['qtbase5-dev', 'libvncserver-dev'],
-    'Budgie Desktop': ['valac', 'libgtk-3-dev'],
+    'aqemu': ['qtbase5-dev', 'libvncserver-dev'],
+    'budgie_desktop': ['valac', 'libgtk-3-dev'],
     'casync': ['libzstd-dev'],
     'cinnamon-desktop': ['libgtk-3-dev', 'libxkbfile-dev', 'libpulse-dev', 'gobject-introspection', 'libgirepository1.0-dev'],
     'dbus-broker': ['python-docutils'],
-    'Geary': ['valac'],
-    'GLib': ['libmount-dev'],
-    'Gnome Builder': ['libdazzle-1.0-dev'],
-    'Gnome MPV': ['libgtk-3-dev'],
-    'Gnome Recipes': ['libsoup2.4-dev', 'libgoa-1.0-dev'],
-    'Gnome Software': ['libappstream-glib-dev'],
-    'Gnome Twitch': ['libgtk-3-dev'],
-    'GtkDApp': ['gdc', 'libgtkd-3-dev'],
-    'Hardcode-Tray': ['libgirepository1.0-dev', 'libgtk-3-dev'],
-    'HexChat': ['libproxy-dev', 'libcanberra-dev', 'libdbus-glib-1-dev'],
-    'Libdrm': ['libpciaccess-dev'],
+    'geary': ['valac'],
+    'glib': ['libmount-dev'],
+    'gnome_builder': ['libdazzle-1.0-dev'],
+    'gnome_mpv': ['libgtk-3-dev'],
+    'gnome_recipes': ['libsoup2.4-dev', 'libgoa-1.0-dev'],
+    'gnome_software': ['libappstream-glib-dev'],
+    'gnome_twitch': ['libgtk-3-dev'],
+    'gtkdapp': ['gdc', 'libgtkd-3-dev'],
+    'hardcode-tray': ['libgirepository1.0-dev', 'libgtk-3-dev'],
+    'hexchat': ['libproxy-dev', 'libcanberra-dev', 'libdbus-glib-1-dev'],
+    'libdrm': ['libpciaccess-dev'],
     'outlier': ['libxml2-dev'],
     'orc' : [],
 }
@@ -43,31 +43,31 @@ url_remap = {
 }
 
 blacklist = [
-    'Arduino sample project',  # work out how to setup cross-env
-    'Budgie Desktop',  # needs a later glib than in trusty
+    'arduino_sample_project',  # work out how to setup cross-env
+    'budgie_desktop',  # needs a later glib than in trusty
     'casync',  # zstd not in trusty?
-    'DXVK',  # work out how to install vulcan devkit
-    'Emeus', # needs a later glib than in trusty
-    'Frida', # No meson.build in top-level directory ?!?
+    'dxvk',  # work out how to install vulcan devkit
+    'emeus', # needs a later glib than in trusty
+    'frida', # no meson.build in top-level directory ?!?
     'fwupd', # needs a later gio than in trusty
-    'Geary', # needs a later glib than in trusty
-    'GLib',  # needs a later libmount than in trusty
-    'Gnome Builder', # needs libdazzle, not in trusty
-    'Gnome MPV', # needs a later glib than in trusty
-    'Gnome Software', # need libappstream-glib, not in trusty
-    'Gnome Twitch', # needs a later glib than in trusty
-    'Grilo', # needs a later gio than in trusty
-    'GTK+', # fallsback to building glib, then fails to use it...
-    'GtkDApp', # needs libgtkd-3-dev, not in trusty
-    'IGT', # needs a later libdrm than in trusty
-    'Json-glib', # needs later gobject than in trusty
-    'Libgit2-glib', # needs a later glib than in trusty
+    'geary', # needs a later glib than in trusty
+    'glib',  # needs a later libmount than in trusty
+    'gnome_builder', # needs libdazzle, not in trusty
+    'gnome_mpv', # needs a later glib than in trusty
+    'gnome_software', # need libappstream-glib, not in trusty
+    'gnome_twitch', # needs a later glib than in trusty
+    'grilo', # needs a later gio than in trusty
+    'gtk+', # fallsback to building glib, then fails to use it...
+    'gtkdapp', # needs libgtkd-3-dev, not in trusty
+    'igt', # needs a later libdrm than in trusty
+    'json-glib', # needs later gobject than in trusty
+    'libgit2-glib', # needs a later glib than in trusty
 ]
 
 # broken by PR #3035
 blacklist += [
     'dbus-broker',
-    'Gnome Recipes',
+    'gnome_recipes',
 ]
 
 # fetch project list, extract projects
@@ -81,6 +81,8 @@ for l in content.splitlines():
         name = m.group(1)
         url = m.group(2)
 
+        name = name.lower().replace(' ','_')
+
         if name in blacklist:
             continue
 
@@ -89,7 +91,7 @@ for l in content.splitlines():
         # workaround freedesktop.org CA not in trusty (?)
         url = url.replace('https://cgit.freedesktop.org/', 'git://anongit.freedesktop.org/')
 
-        projects.append(Project(name = name.lower().replace(' ','_'),
+        projects.append(Project(name = name,
                                 repo = url,
                                 builddep = builddep.get(name, [])))
 
