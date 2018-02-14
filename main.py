@@ -29,15 +29,20 @@ builddep = {
     'hardcode-tray': ['libgirepository1.0-dev', 'libgtk-3-dev'],
     'hexchat': ['libproxy-dev', 'libcanberra-dev', 'libdbus-glib-1-dev', 'libgtk2.0-dev', 'libnotify-dev', 'libluajit-5.1-dev'],
     'libdrm': ['libpciaccess-dev'],
-    'libhttpseverywhere': ['valac', 'libjson-glib-dev', 'libsoup2.4-dev'],
-    'lightdm-webkit2-greeter': ['libdbus-glib-1-dev', 'liblightdm-gobject-1-dev'],
+    'libhttpseverywhere': ['valac', 'libjson-glib-dev', 'libsoup2.4-dev', 'libgee-0.8-dev'],
+    'lightdm-webkit2-greeter': ['libdbus-glib-1-dev', 'liblightdm-gobject-1-dev', 'libgtk-3-dev'],
     'kiwix_libraries': ['libzim-dev'],
-    'miraclecast': ['libudev-dev', 'libsystemd-dev'],
-    'nemo': ['libgtk-3-dev', 'libgirepository1.0-dev'],
+    'miraclecast': ['libudev-dev'],
+    'nemo': ['libgtk-3-dev', 'libgirepository1.0-dev', 'libnotify-dev'],
     'outlier': ['libxml2-dev'],
-    'orc': [],
     'pango': ['libfribidi-dev'],
-    'pipewire': ['libdbus-1-dev'],
+    'pipewire': ['libdbus-1-dev', 'libasound2-dev'],
+    'polari': ['gjs'],
+    'radare2': ['libcapstone-dev'],
+    'sshfs': ['libfuse-dev'],
+    'systemd': ['gperf'],
+    'xi-gtk': ['valac'],
+    'valum': ['valac'],
 }
 
 url_remap = {
@@ -50,6 +55,11 @@ url_remap = {
     'https://www.mesa3d.org/': 'git://anongit.freedesktop.org/mesa/mesa',
     'https://git.gnome.org/browse/nautilus/commit/?id=ed5652c89ac0654df2e82b54b00b27d51c825465': 'https://gitlab.gnome.org/GNOME/nautilus.git',
     'https://pipewire.org/': 'https://github.com/PipeWire/pipewire.git',
+    'http://pitivi.org/': 'https://git.gnome.org/browse/pitivi',
+    'https://wiki.gnome.org/Apps/Sysprof': 'git://git.gnome.org/sysprof',
+    'https://taisei-project.org/': 'https://github.com/taisei-project/taisei.git',
+    'https://lists.freedesktop.org/archives/wayland-devel/2016-November/031984.html': 'git://anongit.freedesktop.org/wayland/libinput', # not merged yet...
+    'https://github.com/facebook/zstd/commit/4dca56ed832c6a88108a2484a8f8ff63d8d76d91': 'https://github.com/facebook/zstd.git'
 }
 
 blacklist = [
@@ -71,9 +81,11 @@ blacklist = [
     'gtkdapp', # needs libgtkd-3-dev, not in trusty
     'igt', # needs a later libdrm than in trusty
     'json-glib', # needs later gobject than in trusty
+    'kiwix_libraries', # libzim-dev in trusty is too old to have a .pc file
     'libgit2-glib', # needs a later glib than in trusty
     'mesa', # needs later libdrm than in trusty
     'pango', # needs later fribidi than in trusty
+    'xorg', # needs a later xproto than in trusty
 ]
 
 # broken by PR #3035
@@ -94,25 +106,26 @@ content = urllib.request.urlopen(project_list_url).read().decode()
 
 projects = []
 for l in content.splitlines():
-    m = re.search(r'\[(.*?)\]\((.*?)\)', l)
-    if m:
-        name = m.group(1)
-        url = m.group(2)
+    if l.startswith(' - '):
+        matches = re.finditer(r'\[(.*?)\]\((.*?)\)', l)
+        for m in matches:
+            name = m.group(1)
+            url = m.group(2)
 
-        name = name.lower().replace(' ','_')
+            name = name.lower().replace(' ','_')
 
-        if name in blacklist:
-            continue
+            if name in blacklist:
+                continue
 
-        url = url_remap.get(url, url)
+            url = url_remap.get(url, url)
 
-        # workaround freedesktop.org CA not in trusty (?)
-        url = re.sub(r'http(s|)://cgit.freedesktop.org/', r'git://anongit.freedesktop.org/', url)
+            # workaround freedesktop.org CA not in trusty (?)
+            url = re.sub(r'http(s|)://cgit.freedesktop.org/', r'git://anongit.freedesktop.org/', url)
 
-        projects.append(Project(name = name,
-                                repo = url,
-                                builddep = builddep.get(name, []),
-                                branch = branch_overrides.get(name, 'master')))
+            projects.append(Project(name = name,
+                                    repo = url,
+                                    builddep = builddep.get(name, []),
+                                    branch = branch_overrides.get(name, 'master')))
 
 # XXX: truncate
 projects = projects[10:]
