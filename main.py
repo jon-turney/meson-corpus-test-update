@@ -10,7 +10,7 @@ import sys
 import yaml
 import urllib.request
 
-Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'builddep'])
+Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'builddep', 'sourcedir'])
 
 builddep = {
     'aqemu': ['qtbase5-dev', 'libvncserver-dev'],
@@ -28,21 +28,24 @@ builddep = {
     'gtkdapp': ['gdc', 'libgtkd-3-dev'],
     'hardcode-tray': ['libgirepository1.0-dev', 'libgtk-3-dev'],
     'hexchat': ['libproxy-dev', 'libcanberra-dev', 'libdbus-glib-1-dev', 'libgtk2.0-dev', 'libnotify-dev', 'libluajit-5.1-dev'],
-    'libdrm': ['libpciaccess-dev'],
-    'libhttpseverywhere': ['valac', 'libjson-glib-dev', 'libsoup2.4-dev', 'libgee-0.8-dev'],
-    'lightdm-webkit2-greeter': ['libdbus-glib-1-dev', 'liblightdm-gobject-1-dev', 'libgtk-3-dev'],
     'kiwix_libraries': ['libzim-dev'],
+    'libdrm': ['libpciaccess-dev'],
+    'libhttpseverywhere': ['valac', 'libjson-glib-dev', 'libsoup2.4-dev', 'libgee-0.8-dev', 'libarchive-dev', 'gobject-introspection'],
+    'lightdm-webkit2-greeter': ['libdbus-glib-1-dev', 'liblightdm-gobject-1-dev', 'libgtk-3-dev'],
     'miraclecast': ['libudev-dev'],
-    'nemo': ['libgtk-3-dev', 'libgirepository1.0-dev', 'libnotify-dev'],
+    'nemo': ['libgtk-3-dev', 'libgirepository1.0-dev', 'libnotify-dev', 'libcinnamon-desktop-dev'],
     'outlier': ['libxml2-dev'],
     'pango': ['libfribidi-dev'],
-    'pipewire': ['libdbus-1-dev', 'libasound2-dev'],
+    'pipewire': ['libdbus-1-dev', 'libasound2-dev', 'libv4l-dev', 'libudev-dev'],
+    'pitivi': ['intltool', 'itstool'],
     'polari': ['gjs'],
-    'radare2': ['libcapstone-dev'],
     'sshfs': ['libfuse-dev'],
-    'systemd': ['gperf'],
-    'xi-gtk': ['valac'],
-    'valum': ['valac'],
+    'systemd': ['gperf', 'libcap-dev'],
+    'taisei_project': ['libsdl2-dev'],
+    'valum': ['valac', 'libsoup2.4-dev'],
+    'wayland_and_weston': ['libudev-dev'],
+    'wlroots': ['libwayland-dev', 'libegl1-mesa-dev'],
+    'xi-gtk': ['valac', 'libgtk-3-dev'],
 }
 
 url_remap = {
@@ -51,6 +54,7 @@ url_remap = {
     'https://wiki.gnome.org/Apps/Geary': 'https://git.gnome.org/browse/geary',
     'https://ebassi.github.io/graphene/': 'git://github.com/ebassi/graphene',
     'https://mail.gnome.org/archives/grilo-list/2017-February/msg00000.html': 'https://git.gnome.org/browse/grilo',
+    'https://git.gnome.org/browse/grilo-plugins/commit/?id=ea047c4fb63e90268eb795ed91a09a2be5068a4c/': 'https://git.gnome.org/browse/grilo-plugins',
     'https://github.com/grindhold/libhttpseverywhere': 'https://git.gnome.org/browse/libhttpseverywhere',  # moved
     'https://www.mesa3d.org/': 'git://anongit.freedesktop.org/mesa/mesa',
     'https://git.gnome.org/browse/nautilus/commit/?id=ed5652c89ac0654df2e82b54b00b27d51c825465': 'https://gitlab.gnome.org/GNOME/nautilus.git',
@@ -83,8 +87,16 @@ blacklist = [
     'json-glib', # needs later gobject than in trusty
     'kiwix_libraries', # libzim-dev in trusty is too old to have a .pc file
     'libgit2-glib', # needs a later glib than in trusty
+    'lightdm-webkit2-greeter', # needs later gtk+-3.0 than in trusty
     'mesa', # needs later libdrm than in trusty
+    'miraclecast', # needs later systems than in trusty
+    'nemo', # needs cinnamon-desktop, not in trusty
     'pango', # needs later fribidi than in trusty
+    'polari', # needs a later gio than in trusty
+    'radare2', # needs libcapstone, not in trusty (?)
+    'sshfs', # needs fuse3, not in trusty
+    'sysprof', # need later gcc than in trusty
+    'xi-gtk', # needs later gtk+-3.0 than in trusty
     'xorg', # needs a later xproto than in trusty
 ]
 
@@ -98,6 +110,11 @@ blacklist += [
 # if we don't want to checkout master, use a branch, tag or hash
 branch_overrides = {
     'lightdm-webkit2-greeter': 'stable',
+}
+
+# if meson.build is not in the root of the source checkout
+sourcedir = {
+    'zstandard': 'contrib/meson',
 }
 
 # fetch project list, extract projects
@@ -125,16 +142,14 @@ for l in content.splitlines():
             projects.append(Project(name = name,
                                     repo = url,
                                     builddep = builddep.get(name, []),
-                                    branch = branch_overrides.get(name, 'master')))
-
-# XXX: truncate
-projects = projects[10:]
+                                    branch = branch_overrides.get(name, 'master'),
+                                    sourcedir = sourcedir.get(name, '.')))
 
 # read template.yaml and insert project list into build matrix
 with open("template.yaml", 'r') as f:
     output = yaml.load(f)
 
-matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch],
+matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch, 'SOURCEDIR=%s' % p.sourcedir],
            'addons': { 'apt': {'packages': p.builddep + ['ninja-build'] }}} for p in projects]
 
 output['matrix'] = {'include': matrix}

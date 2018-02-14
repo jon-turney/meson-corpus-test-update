@@ -17,4 +17,4 @@ install:
 script:
   - git clone --depth=50 --branch ${BRANCH} ${REPO} ${NAME}
   - cd ${NAME}
-  - meson _build
+  - meson _build ${SOURCEDIR}
