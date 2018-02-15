@@ -5,10 +5,11 @@
 #
 
 import collections
+import os
 import re
 import sys
-import yaml
 import urllib.request
+import yaml
 
 Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'builddep', 'sourcedir', 'hacks'])
 
@@ -159,7 +160,8 @@ for l in content.splitlines():
                                     hacks = hacks.get(name, 'true')))
 
 # read template.yaml and insert project list into build matrix
-with open("template.yaml", 'r') as f:
+scriptdir = os.path.dirname(os.path.realpath(sys.argv[0]))
+with open(os.path.join(scriptdir, "template.yaml")) as f:
     output = yaml.load(f)
 
 matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch, 'SOURCEDIR=%s' % p.sourcedir, 'HACKS="%s"' % p.hacks],

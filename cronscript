@@ -1,4 +1,8 @@
-./main.py >.travis.yml
+#!/bin/sh
+srcdir=`dirname "$0"`
+git -C ${srcdir} pull
+
+${srcdir}/main.py >.travis.yml
 
 DATE=`date -u +%Y%m%d`
 git add .travis.yml
