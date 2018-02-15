@@ -10,7 +10,7 @@ import sys
 import yaml
 import urllib.request
 
-Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'builddep', 'sourcedir'])
+Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'builddep', 'sourcedir', 'hacks'])
 
 builddep = {
     'aqemu': ['qtbase5-dev', 'libvncserver-dev'],
@@ -25,9 +25,10 @@ builddep = {
     'gnome_recipes': ['libsoup2.4-dev', 'libgoa-1.0-dev'],
     'gnome_software': ['libappstream-glib-dev'],
     'gnome_twitch': ['libgtk-3-dev'],
+    'grilo_plugins': ['libgrilo-0.3-dev'],
     'gtkdapp': ['gdc', 'libgtkd-3-dev'],
     'hardcode-tray': ['libgirepository1.0-dev', 'libgtk-3-dev'],
-    'hexchat': ['libproxy-dev', 'libcanberra-dev', 'libdbus-glib-1-dev', 'libgtk2.0-dev', 'libnotify-dev', 'libluajit-5.1-dev'],
+    'hexchat': ['libproxy-dev', 'libcanberra-dev', 'libdbus-glib-1-dev', 'libgtk2.0-dev', 'libnotify-dev', 'libluajit-5.1-dev', 'libperl-dev'],
     'kiwix_libraries': ['libzim-dev'],
     'libdrm': ['libpciaccess-dev'],
     'libhttpseverywhere': ['valac', 'libjson-glib-dev', 'libsoup2.4-dev', 'libgee-0.8-dev', 'libarchive-dev', 'gobject-introspection'],
@@ -37,14 +38,14 @@ builddep = {
     'outlier': ['libxml2-dev'],
     'pango': ['libfribidi-dev'],
     'pipewire': ['libdbus-1-dev', 'libasound2-dev', 'libv4l-dev', 'libudev-dev'],
-    'pitivi': ['intltool', 'itstool'],
+    'pitivi': ['intltool', 'itstool','libgstreamer1.0-dev'],
     'polari': ['gjs'],
     'sshfs': ['libfuse-dev'],
-    'systemd': ['gperf', 'libcap-dev'],
+    'systemd': ['gperf', 'libcap-dev','libmount-dev'],
     'taisei_project': ['libsdl2-dev'],
     'valum': ['valac', 'libsoup2.4-dev'],
-    'wayland_and_weston': ['libudev-dev'],
-    'wlroots': ['libwayland-dev', 'libegl1-mesa-dev'],
+    'wayland_and_weston': ['libudev-dev', 'libmtdev-dev', 'libevdev-dev', 'libwacom-dev'],
+    'wlroots': ['libwayland-dev', 'libegl1-mesa-dev', 'wayland-protocols'],
     'xi-gtk': ['valac', 'libgtk-3-dev'],
 }
 
@@ -54,7 +55,7 @@ url_remap = {
     'https://wiki.gnome.org/Apps/Geary': 'https://git.gnome.org/browse/geary',
     'https://ebassi.github.io/graphene/': 'git://github.com/ebassi/graphene',
     'https://mail.gnome.org/archives/grilo-list/2017-February/msg00000.html': 'https://git.gnome.org/browse/grilo',
-    'https://git.gnome.org/browse/grilo-plugins/commit/?id=ea047c4fb63e90268eb795ed91a09a2be5068a4c/': 'https://git.gnome.org/browse/grilo-plugins',
+    'https://git.gnome.org/browse/grilo-plugins/commit/?id=ea047c4fb63e90268eb795ed91a09a2be5068a4c': 'https://git.gnome.org/browse/grilo-plugins',
     'https://github.com/grindhold/libhttpseverywhere': 'https://git.gnome.org/browse/libhttpseverywhere',  # moved
     'https://www.mesa3d.org/': 'git://anongit.freedesktop.org/mesa/mesa',
     'https://git.gnome.org/browse/nautilus/commit/?id=ed5652c89ac0654df2e82b54b00b27d51c825465': 'https://gitlab.gnome.org/GNOME/nautilus.git',
@@ -81,6 +82,7 @@ blacklist = [
     'gnome_software', # need libappstream-glib, not in trusty
     'gnome_twitch', # needs a later glib than in trusty
     'grilo', # needs a later gio than in trusty
+    'grilo_plugins', # needs libgrilo-0.3-dev, not in trusty
     'gtk+', # fallsback to building glib, then fails to use it...
     'gtkdapp', # needs libgtkd-3-dev, not in trusty
     'igt', # needs a later libdrm than in trusty
@@ -89,13 +91,19 @@ blacklist = [
     'libgit2-glib', # needs a later glib than in trusty
     'lightdm-webkit2-greeter', # needs later gtk+-3.0 than in trusty
     'mesa', # needs later libdrm than in trusty
-    'miraclecast', # needs later systems than in trusty
+    'miraclecast', # needs later systemd than in trusty
     'nemo', # needs cinnamon-desktop, not in trusty
     'pango', # needs later fribidi than in trusty
+    'pipewire', # udev fails to install (due to https://github.com/travis-ci/packer-templates/issues/584?)
+    'pitivi', # needs a later gstreamer than in trusty
     'polari', # needs a later gio than in trusty
     'radare2', # needs libcapstone, not in trusty (?)
     'sshfs', # needs fuse3, not in trusty
-    'sysprof', # need later gcc than in trusty
+    'sysprof', # needs later gcc than in trusty
+    'systemd', # needs a later libmount than in trusty
+    'taisei_project', # needs a later sdl2 than in trusty
+    'wayland_and_weston', # needs a later libwacom than in trusty
+    'wlroots', # needs wayland-protocols, not in trusty
     'xi-gtk', # needs later gtk+-3.0 than in trusty
     'xorg', # needs a later xproto than in trusty
 ]
@@ -115,6 +123,10 @@ branch_overrides = {
 # if meson.build is not in the root of the source checkout
 sourcedir = {
     'zstandard': 'contrib/meson',
+}
+
+hacks = {
+    'szl': 'git submodule update --init',  # uses submodules, but not as subprojects
 }
 
 # fetch project list, extract projects
@@ -143,13 +155,14 @@ for l in content.splitlines():
                                     repo = url,
                                     builddep = builddep.get(name, []),
                                     branch = branch_overrides.get(name, 'master'),
-                                    sourcedir = sourcedir.get(name, '.')))
+                                    sourcedir = sourcedir.get(name, '.'),
+                                    hacks = hacks.get(name, 'true')))
 
 # read template.yaml and insert project list into build matrix
 with open("template.yaml", 'r') as f:
     output = yaml.load(f)
 
-matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch, 'SOURCEDIR=%s' % p.sourcedir],
+matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch, 'SOURCEDIR=%s' % p.sourcedir, 'HACKS="%s"' % p.hacks],
            'addons': { 'apt': {'packages': p.builddep + ['ninja-build'] }}} for p in projects]
 
 output['matrix'] = {'include': matrix}

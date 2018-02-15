@@ -17,4 +17,5 @@ install:
 script:
   - git clone --depth=50 --branch ${BRANCH} ${REPO} ${NAME}
   - cd ${NAME}
+  - eval ${HACKS}
   - meson _build ${SOURCEDIR}
