@@ -30,25 +30,44 @@ Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'builddep
 
 # map project names to source package names
 namemap = {
+    'glib' : 'glib2.0',
+    'gtk+': 'gtk+4.0',
     'gstreamer': 'gstreamer1.0',
+    'igt': 'intel-gpu-tools',
     'libfuse' : 'fuse',
+    'pango': 'pango1.0',
+    'xorg': 'xorg-server',
     'zstandard': 'zstd',
 }
 
 # build dependencies to use instead of, or as well (if first is '+'), the builddeps from package manager
 builddep = {
-    'budgie_desktop': ['valac', 'libgtk-3-dev'],
+    'budgie-desktop': ['valac', 'libgtk-3-dev', 'libwnck-3-dev'],
     'dpdk': [],
+    'emeus': [],
+    'gtkdapp': ['libgtkd-3-dev', 'gdc-7'],
     'hardcode-tray': ['libgirepository1.0-dev', 'libgtk-3-dev'],
     'jsoncpp': [],
     'hexchat': ['+', 'libluajit-5.1-dev'],
     'libfuse': ['+', 'udev'],
     'libhttpseverywhere': ['valac', 'libjson-glib-dev', 'libsoup2.4-dev', 'libgee-0.8-dev', 'libarchive-dev', 'gobject-introspection'],
     'libosmscout': [],
+    'lightdm-webkit2-greeter': ['libdbus-glib-1-dev', 'liblightdm-gobject-1-dev', 'libgtk-3-dev'],
+    'kiwix-libraries': ['libzim-dev'],
+    'mesa': ['+', 'libxvmc-dev'],
+    'miraclecast': ['libudev-dev'],
+    'nemo': ['libxapp-dev'],
     'outlier': [],
+    'pango': ['+', 'libfribidi-dev'],
     'parzip': [],
+    'pipewire': ['libdbus-1-dev', 'libasound2-dev', 'libv4l-dev', 'libudev-dev'],
+    'radare2': ['+', 'libcapstone-dev'],
     'szl': [],
+    'taisei-project': ['libsdl2-dev', 'libsdl2-ttf-dev'],
     'valum': ['valac', 'libsoup2.4-dev'],
+    'wayland-and-weston': ['libudev-dev', 'libmtdev-dev', 'libevdev-dev', 'libwacom-dev', 'doxygen'],
+    'wlroots': ['libwayland-dev', 'libegl1-mesa-dev', 'wayland-protocols'],
+    'xi-gtk': ['valac', 'libgtk-3-dev'],
 }
 
 # map urls to git repo urls
@@ -66,20 +85,28 @@ url_remap = {
     'http://pitivi.org/': 'https://git.gnome.org/browse/pitivi',
     'https://wiki.gnome.org/Apps/Sysprof': 'git://git.gnome.org/sysprof',
     'https://taisei-project.org/': 'https://github.com/taisei-project/taisei.git',
-    'https://lists.freedesktop.org/archives/wayland-devel/2016-November/031984.html': 'git://anongit.freedesktop.org/wayland/libinput', # not merged yet...
+    'https://lists.freedesktop.org/archives/wayland-devel/2016-November/031984.html': 'git://anongit.freedesktop.org/wayland/libinput', # not merged yet, try wayland-libinput instead...
     'https://github.com/facebook/zstd/commit/4dca56ed832c6a88108a2484a8f8ff63d8d76d91': 'https://github.com/facebook/zstd.git'
 }
 
 # blacklist of projects we don't attempt to build
 blacklist = [
-    'arduino_sample_project',  # work out how to setup cross-env
+    'arduino-sample-project',  # work out how to setup cross-env
+    'dxvk',  # work out how to install vulcan devkit
     'frida', # no meson.build ?!?
+    'gnome-builder', # needs a later libdazzle than in artful
+    'gnome-software', # needs a later appstream-glib than in artful
+    'kiwix-libraries', #  needs a later libzim than in artful
+    'libgit2-glib', # needs a later libgit2 than in artful
+    'pitivi', # needs a later gstreamer-1.0 than in artful
+    'sshfs', # needs a later libfuse than in artful
+    'wlroots', # needs a later wayland-protocols than in artful
 ]
 
 # broken by PR #3035
 blacklist += [
     'dbus-broker',
-    'gnome_recipes',
+    'gnome-recipes',
     'nautilus',
 ]
 
@@ -113,7 +140,8 @@ for l in content.splitlines():
             name = m.group(1)
             url = m.group(2)
 
-            name = name.lower().replace(' ','_')
+            # convert name to a form which is more likely to be a packagename
+            name = name.lower().replace(' ','-')
 
             if name in blacklist:
                 continue

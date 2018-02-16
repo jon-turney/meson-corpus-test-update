@@ -4,3 +4,4 @@ TODO:
 - I've got away without any projects using a non-default meson configuration, but probably needed eventually
 - Invoke ninja to build/test/install to verify we've generated correctly ?
 - Since we're always providing all builddeps, we're not exercising fallbacks
+- Pin to a specific git commit (not bleeding edge so artful can satisify builddeps & to avoid false reports due to upstream breakage)
