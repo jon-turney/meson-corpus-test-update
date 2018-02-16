@@ -4,52 +4,54 @@
 # Construct a .travis.yml to run the git master of meson on the list of projects
 #
 
+import argparse
 import collections
 import os
 import re
+import string
 import sys
 import urllib.request
 import yaml
 
+#
+# argument parsing
+#
+
+parser = argparse.ArgumentParser('meson corupus test updater tool')
+parser.add_argument('yml', help='.travis.yml file', metavar='YMLFILE')
+parser.add_argument('docker', help='Dockerfile', metavar='DOCKERFILE')
+args = parser.parse_args()
+
+#
+# static data
+#
+
 Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'builddep', 'sourcedir', 'hacks'])
 
-builddep = {
-    'aqemu': ['qtbase5-dev', 'libvncserver-dev'],
-    'budgie_desktop': ['valac', 'libgtk-3-dev'],
-    'casync': ['libzstd-dev'],
-    'cinnamon-desktop': ['libgtk-3-dev', 'libxkbfile-dev', 'libpulse-dev', 'gobject-introspection', 'libgirepository1.0-dev'],
-    'dbus-broker': ['python-docutils'],
-    'geary': ['valac'],
-    'glib': ['libmount-dev'],
-    'gnome_builder': ['libdazzle-1.0-dev'],
-    'gnome_mpv': ['libgtk-3-dev'],
-    'gnome_recipes': ['libsoup2.4-dev', 'libgoa-1.0-dev'],
-    'gnome_software': ['libappstream-glib-dev'],
-    'gnome_twitch': ['libgtk-3-dev'],
-    'grilo_plugins': ['libgrilo-0.3-dev'],
-    'gtkdapp': ['gdc', 'libgtkd-3-dev'],
-    'hardcode-tray': ['libgirepository1.0-dev', 'libgtk-3-dev'],
-    'hexchat': ['libproxy-dev', 'libcanberra-dev', 'libdbus-glib-1-dev', 'libgtk2.0-dev', 'libnotify-dev', 'libluajit-5.1-dev', 'libperl-dev'],
-    'kiwix_libraries': ['libzim-dev'],
-    'libdrm': ['libpciaccess-dev'],
-    'libhttpseverywhere': ['valac', 'libjson-glib-dev', 'libsoup2.4-dev', 'libgee-0.8-dev', 'libarchive-dev', 'gobject-introspection'],
-    'lightdm-webkit2-greeter': ['libdbus-glib-1-dev', 'liblightdm-gobject-1-dev', 'libgtk-3-dev'],
-    'miraclecast': ['libudev-dev'],
-    'nemo': ['libgtk-3-dev', 'libgirepository1.0-dev', 'libnotify-dev', 'libcinnamon-desktop-dev'],
-    'outlier': ['libxml2-dev'],
-    'pango': ['libfribidi-dev'],
-    'pipewire': ['libdbus-1-dev', 'libasound2-dev', 'libv4l-dev', 'libudev-dev'],
-    'pitivi': ['intltool', 'itstool','libgstreamer1.0-dev'],
-    'polari': ['gjs'],
-    'sshfs': ['libfuse-dev'],
-    'systemd': ['gperf', 'libcap-dev','libmount-dev'],
-    'taisei_project': ['libsdl2-dev'],
-    'valum': ['valac', 'libsoup2.4-dev'],
-    'wayland_and_weston': ['libudev-dev', 'libmtdev-dev', 'libevdev-dev', 'libwacom-dev'],
-    'wlroots': ['libwayland-dev', 'libegl1-mesa-dev', 'wayland-protocols'],
-    'xi-gtk': ['valac', 'libgtk-3-dev'],
+# map project names to source package names
+namemap = {
+    'gstreamer': 'gstreamer1.0',
+    'libfuse' : 'fuse',
+    'zstandard': 'zstd',
 }
 
+# build dependencies to use instead of, or as well (if first is '+'), the builddeps from package manager
+builddep = {
+    'budgie_desktop': ['valac', 'libgtk-3-dev'],
+    'dpdk': [],
+    'hardcode-tray': ['libgirepository1.0-dev', 'libgtk-3-dev'],
+    'jsoncpp': [],
+    'hexchat': ['+', 'libluajit-5.1-dev'],
+    'libfuse': ['+', 'udev'],
+    'libhttpseverywhere': ['valac', 'libjson-glib-dev', 'libsoup2.4-dev', 'libgee-0.8-dev', 'libarchive-dev', 'gobject-introspection'],
+    'libosmscout': [],
+    'outlier': [],
+    'parzip': [],
+    'szl': [],
+    'valum': ['valac', 'libsoup2.4-dev'],
+}
+
+# map urls to git repo urls
 url_remap = {
     'http://dpdk.org/ml/archives/dev/2018-January/089724.html': 'git://dpdk.org/dpdk',
     'https://www.frida.re/': 'https://github.com/frida/frida.git',
@@ -68,45 +70,10 @@ url_remap = {
     'https://github.com/facebook/zstd/commit/4dca56ed832c6a88108a2484a8f8ff63d8d76d91': 'https://github.com/facebook/zstd.git'
 }
 
+# blacklist of projects we don't attempt to build
 blacklist = [
     'arduino_sample_project',  # work out how to setup cross-env
-    'budgie_desktop',  # needs a later glib than in trusty
-    'casync',  # zstd not in trusty?
-    'dxvk',  # work out how to install vulcan devkit
-    'emeus', # needs a later glib than in trusty
-    'frida', # no meson.build in top-level directory ?!?
-    'fwupd', # needs a later gio than in trusty
-    'geary', # needs a later glib than in trusty
-    'glib',  # needs a later libmount than in trusty
-    'gnome_builder', # needs libdazzle, not in trusty
-    'gnome_mpv', # needs a later glib than in trusty
-    'gnome_software', # need libappstream-glib, not in trusty
-    'gnome_twitch', # needs a later glib than in trusty
-    'grilo', # needs a later gio than in trusty
-    'grilo_plugins', # needs libgrilo-0.3-dev, not in trusty
-    'gtk+', # fallsback to building glib, then fails to use it...
-    'gtkdapp', # needs libgtkd-3-dev, not in trusty
-    'igt', # needs a later libdrm than in trusty
-    'json-glib', # needs later gobject than in trusty
-    'kiwix_libraries', # libzim-dev in trusty is too old to have a .pc file
-    'libgit2-glib', # needs a later glib than in trusty
-    'lightdm-webkit2-greeter', # needs later gtk+-3.0 than in trusty
-    'mesa', # needs later libdrm than in trusty
-    'miraclecast', # needs later systemd than in trusty
-    'nemo', # needs cinnamon-desktop, not in trusty
-    'pango', # needs later fribidi than in trusty
-    'pipewire', # udev fails to install (due to https://github.com/travis-ci/packer-templates/issues/584?)
-    'pitivi', # needs a later gstreamer than in trusty
-    'polari', # needs a later gio than in trusty
-    'radare2', # needs libcapstone, not in trusty (?)
-    'sshfs', # needs fuse3, not in trusty
-    'sysprof', # needs later gcc than in trusty
-    'systemd', # needs a later libmount than in trusty
-    'taisei_project', # needs a later sdl2 than in trusty
-    'wayland_and_weston', # needs a later libwacom than in trusty
-    'wlroots', # needs wayland-protocols, not in trusty
-    'xi-gtk', # needs later gtk+-3.0 than in trusty
-    'xorg', # needs a later xproto than in trusty
+    'frida', # no meson.build ?!?
 ]
 
 # broken by PR #3035
@@ -126,11 +93,15 @@ sourcedir = {
     'zstandard': 'contrib/meson',
 }
 
+# misc hacks needed to build
 hacks = {
     'szl': 'git submodule update --init',  # uses submodules, but not as subprojects
 }
 
+#
 # fetch project list, extract projects
+#
+
 project_list_url = "https://raw.githubusercontent.com/mesonbuild/meson/master/docs/markdown/Users.md"
 content = urllib.request.urlopen(project_list_url).read().decode()
 
@@ -159,14 +130,46 @@ for l in content.splitlines():
                                     sourcedir = sourcedir.get(name, '.'),
                                     hacks = hacks.get(name, 'true')))
 
-# read template.yaml and insert project list into build matrix
+
+#
+# read Dockerfile.template and insert build-deps
+#
+
 scriptdir = os.path.dirname(os.path.realpath(sys.argv[0]))
+with open(os.path.join(scriptdir, "Dockerfile.template")) as f:
+    docker = f.read()
+    template = string.Template(docker)
+
+ai = []
+bd = []
+for p in projects:
+    if p.name not in builddep:
+        # install the package manager's builddeps for this project
+        bd.append(namemap.get(p.name, p.name))
+    else:
+        l = builddep[p.name]
+        if not l or l[0] != '+':
+            # we have a list of builddeps (e.g. for projects not packaged)
+            ai.extend(builddep[p.name])
+        else:
+            # install the package manager's builddeps for this project ...
+            bd.append(namemap.get(p.name, p.name))
+            # ... and we have a list of buildeps (e.g. if some are missing)
+            ai.extend(builddep[p.name][1:])
+
+with open(args.docker, 'w') as f:
+    print(template.substitute(builddep = ' '.join(bd), alsoinstall = ' '.join(ai)), file=f)
+
+#
+# read template.yml and insert project list into build matrix
+#
+
 with open(os.path.join(scriptdir, "template.yaml")) as f:
     output = yaml.load(f)
 
-matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch, 'SOURCEDIR=%s' % p.sourcedir, 'HACKS="%s"' % p.hacks],
-           'addons': { 'apt': {'packages': p.builddep + ['ninja-build'] }}} for p in projects]
+matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch, 'SOURCEDIR=%s' % p.sourcedir, 'HACKS="%s"' % p.hacks]} for p in projects]
 
 output['matrix'] = {'include': matrix}
 
-print(yaml.dump(output, default_flow_style=False))
+with open(args.yml, 'w') as f:
+    print(yaml.dump(output, default_flow_style=False), file=f)
