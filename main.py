@@ -127,8 +127,8 @@ for l in content.splitlines():
                                     repo = url,
                                     builddep = builddep.get(name, []),
                                     branch = branch_overrides.get(name, 'master'),
-                                    sourcedir = sourcedir.get(name, '.'),
-                                    hacks = hacks.get(name, 'true')))
+                                    sourcedir = sourcedir.get(name, None),
+                                    hacks = hacks.get(name, None)))
 
 
 #
@@ -167,7 +167,9 @@ with open(args.docker, 'w') as f:
 with open(os.path.join(scriptdir, "template.yaml")) as f:
     output = yaml.load(f)
 
-matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch, 'SOURCEDIR=%s' % p.sourcedir, 'HACKS="%s"' % p.hacks]} for p in projects]
+matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch]
+                   + (['SOURCEDIR=%s' % p.sourcedir] if p.sourcedir else [])
+                   + (['HACKS="%s"' % p.hacks] if p.hacks else [])} for p in projects]
 
 output['matrix'] = {'include': matrix}
 

@@ -2,6 +2,5 @@ A tool for updating the meson-corpus-test repository
 
 TODO:
 - I've got away without any projects using a non-default meson configuration, but probably needed eventually
-- Default env vars in script, rather than in python
 - Invoke ninja to build/test/install to verify we've generated correctly ?
 - Since we're always providing all builddeps, we're not exercising fallbacks
