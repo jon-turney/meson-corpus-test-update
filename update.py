@@ -172,7 +172,7 @@ for l in content.splitlines():
                                     repo = url,
                                     builddep = bd,
                                     alsoinstall = ai,
-                                    branch = branch_overrides.get(name, 'master'),
+                                    branch = branch_overrides.get(name, None),
                                     sourcedir = sourcedir.get(name, None),
                                     hacks = hacks.get(name, None)))
 
@@ -184,7 +184,8 @@ scriptdir = os.path.dirname(os.path.realpath(sys.argv[0]))
 with open(os.path.join(scriptdir, "template.yaml")) as f:
     output = yaml.load(f)
 
-matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch]
+matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo]
+                   + (['BRANCH=%s' % p.branch] if p.branch else [])
                    + (['BUILDDEP=%s' % p.builddep] if p.builddep else [])
                    + (['ALSOINSTALL="%s"' % ' '.join(p.alsoinstall)] if p.alsoinstall else [])
                    + (['SOURCEDIR=%s' % p.sourcedir] if p.sourcedir else [])

@@ -15,7 +15,7 @@ before_script:
   - if test -n "${BUILDDEP}" ; then echo "apt-get -y build-dep ${BUILDDEP}" >>script ; fi
   - if test -n "${ALSOINSTALL}" ; then echo "apt-get -y install ${ALSOINSTALL}" >>script ; fi
   - echo "pip3 install git+https://github.com/mesonbuild/meson.git" >>script
-  - echo "git clone --depth=50 --branch ${BRANCH} ${REPO} ${NAME}" >>script
+  - echo "git clone --depth=50 --branch ${BRANCH:-master} ${REPO} ${NAME}" >>script
   - echo "cd ${NAME}" >>script
   - if test -n "${HACKS}" ; then echo "${HACKS}" >>script ; fi
   - echo "meson _build ${SOURCEDIR}" >>script
