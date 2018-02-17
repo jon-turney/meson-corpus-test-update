@@ -8,7 +8,6 @@ import argparse
 import collections
 import os
 import re
-import string
 import sys
 import urllib.request
 import yaml
@@ -19,14 +18,13 @@ import yaml
 
 parser = argparse.ArgumentParser('meson corupus test updater tool')
 parser.add_argument('yml', help='.travis.yml file', metavar='YMLFILE')
-parser.add_argument('docker', help='Dockerfile', metavar='DOCKERFILE')
 args = parser.parse_args()
 
 #
 # static data
 #
 
-Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'builddep', 'sourcedir', 'hacks'])
+Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'builddep', 'alsoinstall', 'sourcedir', 'hacks'])
 
 # map project names to source package names
 namemap = {
@@ -40,34 +38,39 @@ namemap = {
     'zstandard': 'zstd',
 }
 
-# build dependencies to use instead of, or as well (if first is '+'), the builddeps from package manager
+# build dependencies to use instead of, or as well as (if first is '+'), the builddeps from package manager
 builddep = {
-    'budgie-desktop': ['valac', 'libgtk-3-dev', 'libwnck-3-dev'],
+    'budgie-desktop': ['valac', 'libgtk-3-dev', 'libwnck-3-dev', 'libpeas-dev', 'uuid-dev', 'libibus-1.0-dev', 'libgnome-desktop-3-dev', 'libaccountsservice-dev', 'intltool'],
+    'casync': ['+', 'libudev-dev'],
     'dpdk': [],
-    'emeus': [],
-    'gtkdapp': ['libgtkd-3-dev', 'gdc-7'],
+    'dbus-broker': ['python-docutils'],
+    'emeus': ['libglib2.0-dev', 'libgtk-3-dev', 'libgirepository1.0-dev'],
+    'fwupd': ['+', 'libjson-glib-dev', 'help2man'],
+    'geary': ['+', 'libunwind-dev'],
+    'gtkdapp': ['libgtkd-3-dev', 'gdc', 'gsettings-desktop-schemas-dev', 'libglib2.0-dev', 'gettext'],
     'hardcode-tray': ['libgirepository1.0-dev', 'libgtk-3-dev'],
     'jsoncpp': [],
     'hexchat': ['+', 'libluajit-5.1-dev'],
     'libfuse': ['+', 'udev'],
     'libhttpseverywhere': ['valac', 'libjson-glib-dev', 'libsoup2.4-dev', 'libgee-0.8-dev', 'libarchive-dev', 'gobject-introspection'],
     'libosmscout': [],
-    'lightdm-webkit2-greeter': ['libdbus-glib-1-dev', 'liblightdm-gobject-1-dev', 'libgtk-3-dev'],
+    'lightdm-webkit2-greeter': ['libdbus-glib-1-dev', 'liblightdm-gobject-1-dev', 'libgtk-3-dev', 'libwebkit2gtk-4.0-dev'],
     'kiwix-libraries': ['libzim-dev'],
-    'mesa': ['+', 'libxvmc-dev'],
-    'miraclecast': ['libudev-dev'],
-    'nemo': ['libxapp-dev'],
+    'mesa': ['+', 'libxvmc-dev', 'libomxil-bellagio-dev'],
+    'miraclecast': ['libudev-dev', 'libglib2.0-dev', 'libsystemd-dev'],
+    'nemo': ['+', 'libxapp-dev'],
     'outlier': [],
     'pango': ['+', 'libfribidi-dev'],
     'parzip': [],
     'pipewire': ['libdbus-1-dev', 'libasound2-dev', 'libv4l-dev', 'libudev-dev'],
-    'radare2': ['+', 'libcapstone-dev'],
+    'pithos': ['+', 'libglib2.0-dev'],
+    'sysprof': ['+', 'systemd'],
     'szl': [],
-    'taisei-project': ['libsdl2-dev', 'libsdl2-ttf-dev'],
-    'valum': ['valac', 'libsoup2.4-dev'],
-    'wayland-and-weston': ['libudev-dev', 'libmtdev-dev', 'libevdev-dev', 'libwacom-dev', 'doxygen'],
+    'taisei-project': ['libsdl2-dev', 'libsdl2-ttf-dev', 'libsdl2-image-dev', 'libpng-dev', 'python-docutils'],
+    'valum': ['valac', 'libsoup2.4-dev', 'libssl-dev'],
+    'wayland-and-weston': ['libudev-dev', 'libmtdev-dev', 'libevdev-dev', 'libwacom-dev', 'doxygen', 'graphviz', 'libgtk-3-dev', 'check', 'valgrind'],
     'wlroots': ['libwayland-dev', 'libegl1-mesa-dev', 'wayland-protocols'],
-    'xi-gtk': ['valac', 'libgtk-3-dev'],
+    'xi-gtk': ['valac', 'libgtk-3-dev', 'libjson-glib-dev'],
 }
 
 # map urls to git repo urls
@@ -96,18 +99,13 @@ blacklist = [
     'frida', # no meson.build ?!?
     'gnome-builder', # needs a later libdazzle than in artful
     'gnome-software', # needs a later appstream-glib than in artful
+    'gtk+', # needs a later glib than in artful
     'kiwix-libraries', #  needs a later libzim than in artful
     'libgit2-glib', # needs a later libgit2 than in artful
+    'mesa', # needs later deps than in artful
     'pitivi', # needs a later gstreamer-1.0 than in artful
     'sshfs', # needs a later libfuse than in artful
     'wlroots', # needs a later wayland-protocols than in artful
-]
-
-# broken by PR #3035
-blacklist += [
-    'dbus-broker',
-    'gnome-recipes',
-    'nautilus',
 ]
 
 # if we don't want to checkout master, use a branch, tag or hash
@@ -122,6 +120,9 @@ sourcedir = {
 
 # misc hacks needed to build
 hacks = {
+    'lightdm-webkit2-greeter': '''sed -i "s#'@0@/utils.sh'.format(meson.build_root())#join_paths(meson.source_root(), 'build/utils.sh')#" src/meson.build''',
+    'parzip': 'meson wrap update zlib',
+    'radare2': '(cd shlr; ./capstone.sh https://github.com/aquynh/capstone.git next)', # yes, I threw up in my mouth, a bit...
     'szl': 'git submodule update --init',  # uses submodules, but not as subprojects
 }
 
@@ -151,55 +152,45 @@ for l in content.splitlines():
             # workaround freedesktop.org CA not in trusty (?)
             url = re.sub(r'http(s|)://cgit.freedesktop.org/', r'git://anongit.freedesktop.org/', url)
 
+            if name not in builddep:
+                # install the package manager's builddeps for this project
+                bd = namemap.get(name, name)
+                ai = None
+            else:
+                l = builddep[name]
+                if not l or l[0] != '+':
+                    # we have a list of builddeps (e.g. for projects not packaged)
+                    bd = None
+                    ai = builddep[name]
+                else:
+                    # install the package manager's builddeps for this project ...
+                    bd = namemap.get(name, name)
+                    # ... and we have a list of buildeps (e.g. if some are missing)
+                    ai = builddep[name][1:]
+
             projects.append(Project(name = name,
                                     repo = url,
-                                    builddep = builddep.get(name, []),
+                                    builddep = bd,
+                                    alsoinstall = ai,
                                     branch = branch_overrides.get(name, 'master'),
                                     sourcedir = sourcedir.get(name, None),
                                     hacks = hacks.get(name, None)))
-
-
-#
-# read Dockerfile.template and insert build-deps
-#
-
-scriptdir = os.path.dirname(os.path.realpath(sys.argv[0]))
-with open(os.path.join(scriptdir, "Dockerfile.template")) as f:
-    docker = f.read()
-    template = string.Template(docker)
-
-ai = []
-bd = []
-for p in projects:
-    if p.name not in builddep:
-        # install the package manager's builddeps for this project
-        bd.append(namemap.get(p.name, p.name))
-    else:
-        l = builddep[p.name]
-        if not l or l[0] != '+':
-            # we have a list of builddeps (e.g. for projects not packaged)
-            ai.extend(builddep[p.name])
-        else:
-            # install the package manager's builddeps for this project ...
-            bd.append(namemap.get(p.name, p.name))
-            # ... and we have a list of buildeps (e.g. if some are missing)
-            ai.extend(builddep[p.name][1:])
-
-with open(args.docker, 'w') as f:
-    print(template.substitute(builddep = ' '.join(bd), alsoinstall = ' '.join(ai)), file=f)
 
 #
 # read template.yml and insert project list into build matrix
 #
 
+scriptdir = os.path.dirname(os.path.realpath(sys.argv[0]))
 with open(os.path.join(scriptdir, "template.yaml")) as f:
     output = yaml.load(f)
 
 matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo, 'BRANCH=%s' % p.branch]
+                   + (['BUILDDEP=%s' % p.builddep] if p.builddep else [])
+                   + (['ALSOINSTALL="%s"' % ' '.join(p.alsoinstall)] if p.alsoinstall else [])
                    + (['SOURCEDIR=%s' % p.sourcedir] if p.sourcedir else [])
                    + (['HACKS="%s"' % p.hacks] if p.hacks else [])} for p in projects]
 
 output['matrix'] = {'include': matrix}
 
 with open(args.yml, 'w') as f:
-    print(yaml.dump(output, default_flow_style=False), file=f)
+    print(yaml.dump(output, default_flow_style=False, width=128), file=f)

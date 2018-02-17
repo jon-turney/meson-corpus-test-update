@@ -3,13 +3,13 @@ set -e
 
 srcdir=`dirname "$0"`
 git -C ${srcdir} pull
-${srcdir}/update.py .travis.yml Dockerfile.new
+${srcdir}/update.py .travis.yml
 
 # update the docker container, if the Dockerfile has changed
-if ! cmp -s Dockerfile Dockerfile.new ; then
-  mv Dockerfile.new Dockerfile
+if ! cmp -s ${srcdir}/Dockerfile ${srcdir}/Dockerfile.prev ; then
+  cp ${srcdir}/Dockerfile ${srcdir}/Dockerfile.prev
   docker rmi mesoncorpusci jturney/mesoncorpusci || true
-  docker build . -t mesoncorpusci
+  docker build . -t mesoncorpusci -f ${srcdir}/Dockerfile
   docker tag mesoncorpusci jturney/mesoncorpusci
   echo $DOCKERHUB_PASSWORD | docker login --username jturney --password-stdin || true
   docker push jturney/mesoncorpusci
