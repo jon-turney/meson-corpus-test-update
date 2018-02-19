@@ -1,0 +1,293 @@
+#
+# configuration for meson-corpus-test-update
+#
+# This file provides extra information for the list of projects taken from
+# Users.md
+#
+# project names are converted to putative package names by lowercasing, and
+# replacing spaces with dashes
+#
+# blacklisted:          if present, project will not be built
+# builddep:             override the package name to 'apt-get builddep', or should be false to skip if the project isn't packaged for Ubuntu
+# install:              list of additional packages to 'apt-get install'
+# repo-url:             git repo URL, if different to that linked in Users.md
+# commit:               git branch, tag, or commit-id, otherwise master is used
+# extra-commands:       extra commands to execute before build
+# sourcedir:            source directory containing meson.build, if not root of checkout
+#
+
+arduino-sample-project:
+  blacklisted: 'need to work out how to setup cross-env'
+
+budgie-desktop:
+  builddep: false
+  install:
+  - valac
+  - libgtk-3-dev
+  - libwnck-3-dev
+  - libpeas-dev
+  - uuid-dev
+  - libibus-1.0-dev
+  - libgnome-desktop-3-dev
+  - libaccountsservice-dev
+  - intltool
+  - libpulse-dev
+  - sassc
+  - libpolkit-agent-1-dev
+  - libmutter-1-dev
+  - libgnome-menu-3-dev
+  - libupower-glib-dev
+  - libgnome-bluetooth-dev
+  - gtk-doc-tools
+
+casync:
+  install:
+  - libudev-dev
+
+dbus-broker:
+  builddep: false
+  install:
+  - python-docutils
+  - libdbus-1-dev
+  - libglib2.0-dev
+  - libsystemd-dev
+  - systemd
+
+dpdk:
+  builddep: false
+  repo-url: git://dpdk.org/dpdk
+
+dxvk:
+  blacklisted: 'need to work out how to install vulcan devkit'
+
+emeus:
+  builddep: false
+  install:
+  - libglib2.0-dev
+  - libgtk-3-dev
+  - libgirepository1.0-dev
+
+frida:
+  blacklisted: 'find where the meson.build is at ?!?'
+
+fwupd:
+  install:
+  - libjson-glib-dev
+  - help2man
+
+geary:
+  install:
+  - libunwind-dev
+  repo-url: https://git.gnome.org/browse/geary
+
+glib:
+  builddep: glib2.0
+
+gnome-builder:
+  blacklisted: 'needs a later libdazzle than in artful'
+
+gnome-recipes:
+  install:
+  - libgoa-1.0-dev
+  - libjson-glib-dev
+
+gnome-software:
+  blacklisted: 'needs a later appstream-glib than in artful'
+
+graphene:
+  repo-url: git://github.com/ebassi/graphene
+
+grilo:
+  repo-url: https://git.gnome.org/browse/grilo
+
+grilo-plugins:
+  repo-url: https://git.gnome.org/browse/grilo-plugins
+
+gstreamer:
+  builddep: gstreamer1.0
+  repo-url: git://anongit.freedesktop.org/gstreamer/gstreamer/
+
+gtk+:
+  blacklisted: 'needs a later glib than in artful (?)'
+
+gtkdapp:
+  builddep: false
+  install:
+  - libgtkd-3-dev
+  - gdc
+  - gsettings-desktop-schemas-dev
+  - libglib2.0-dev
+  - gettext
+
+hardcode-tray:
+  builddep: false
+  install:
+  - libgirepository1.0-dev
+  - libgtk-3-dev
+
+hexchat:
+  install:
+  - libluajit-5.1-dev
+
+igt:
+  builddep: intel-gpu-tools
+  repo-url: git://anongit.freedesktop.org/xorg/app/intel-gpu-tools/
+
+jsoncpp:
+  builddep: false
+
+kiwix-libraries:
+  blacklisted: 'needs a later libzim than in artful'
+
+libdrm:
+  repo-url: git://anongit.freedesktop.org/drm/libdrm/
+
+libfuse:
+  install:
+  - udev
+  builddep: fuse
+
+libgit2-glib:
+  blacklisted: 'needs a later libgit2 than in artful'
+
+libhttpseverywhere:
+  builddep: false
+  install:
+  - valac
+  - libjson-glib-dev
+  - libsoup2.4-dev
+  - libgee-0.8-dev
+  - libarchive-dev
+  - gobject-introspection
+  repo-url: https://git.gnome.org/browse/libhttpseverywhere
+
+libosmscout:
+  builddep: false
+
+lightdm-webkit2-greeter:
+  builddep: false
+  commit: stable
+  # fix for building in something other than ./build
+  extra-commands: sed -i \"s!'@0@/utils.sh'.format(meson.build_root())!join_paths(meson.source_root(), 'build/utils.sh')!\" src/meson.build
+  install:
+  - libdbus-glib-1-dev
+  - liblightdm-gobject-1-dev
+  - libgtk-3-dev
+  - libwebkit2gtk-4.0-dev
+
+mesa:
+  blacklisted: 'needs later deps than in artful'
+
+miraclecast:
+  builddep: false
+  install:
+  - libudev-dev
+  - libglib2.0-dev
+  - libsystemd-dev
+
+nautilus:
+  install:
+  - libgexiv2-dev
+  repo-url: https://gitlab.gnome.org/GNOME/nautilus.git
+
+nemo:
+  install:
+  - libxapp-dev
+
+orc:
+  repo-url: git://anongit.freedesktop.org/gstreamer/orc/
+
+outlier:
+  builddep: false
+
+pango:
+  install:
+  - libfribidi-dev
+  builddep: pango1.0
+
+parzip:
+  builddep: false
+  extra-commands: meson wrap update zlib
+
+pipewire:
+  builddep: false
+  install:
+  - libdbus-1-dev
+  - libasound2-dev
+  - libv4l-dev
+  - libudev-dev
+  repo-url: https://github.com/PipeWire/pipewire.git
+
+pithos:
+  install:
+  - libglib2.0-dev
+
+pitivi:
+  blacklisted: 'needs a later gstreamer-1.0 than in artful'
+
+radare2:
+  # yes, I threw up in my mouth, a bit...
+  extra-commands: (cd shlr; ./capstone.sh https://github.com/aquynh/capstone.git next)
+
+sshfs:
+  blacklisted: 'needs a later libfuse than in artful'
+
+sysprof:
+  install:
+  - systemd
+  repo-url: git://git.gnome.org/sysprof
+
+szl:
+  builddep: false
+  # uses submodules, but not as subprojects
+  extra-commands: git submodule update --init
+
+taisei-project:
+  builddep: false
+  install:
+  - libsdl2-dev
+  - libsdl2-ttf-dev
+  - libsdl2-image-dev
+  - libpng-dev
+  - python-docutils
+  repo-url: https://github.com/taisei-project/taisei.git
+
+valum:
+  builddep: false
+  install:
+  - valac
+  - libsoup2.4-dev
+  - libssl-dev
+
+wayland-and-weston:
+  builddep: false
+  install:
+  - libudev-dev
+  - libmtdev-dev
+  - libevdev-dev
+  - libwacom-dev
+  - doxygen
+  - graphviz
+  - libgtk-3-dev
+  - check
+  - valgrind
+  repo-url: git://anongit.freedesktop.org/wayland/libinput
+
+wlroots:
+  blacklisted: 'needs a later wayland-protocols than in artful'
+
+xi-gtk:
+  builddep: false
+  install:
+  - valac
+  - libgtk-3-dev
+  - libjson-glib-dev
+
+xorg:
+  builddep: xorg-server
+  repo-url: git://anongit.freedesktop.org/xorg/xserver/
+
+zstandard:
+  builddep: zstd
+  repo-url: https://github.com/facebook/zstd.git
+  sourcedir: contrib/meson
