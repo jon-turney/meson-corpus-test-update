@@ -164,6 +164,9 @@ libhttpseverywhere:
 libosmscout:
   builddep: false
 
+libzim:
+  builddep: zimlib
+
 lightdm-webkit2-greeter:
   builddep: false
   commit: stable
