@@ -189,6 +189,8 @@ nautilus:
   install:
   - libgexiv2-dev
   repo-url: https://gitlab.gnome.org/GNOME/nautilus.git
+  # later than this requires gtk+-3.0 3.22.26, not in artful
+  commit: d5e7c6234e33905f30d474240f6c327a278ca470
 
 nemo:
   install:

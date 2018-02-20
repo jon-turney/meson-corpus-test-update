@@ -34,7 +34,7 @@ with open(os.path.join(scriptdir, "config.yaml")) as f:
 # fetch project list, extract projects
 #
 
-Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'builddep', 'alsoinstall', 'sourcedir', 'hacks'])
+Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'commit', 'builddep', 'alsoinstall', 'sourcedir', 'hacks'])
 
 project_list_url = "https://raw.githubusercontent.com/mesonbuild/meson/master/docs/markdown/Users.md"
 content = urllib.request.urlopen(project_list_url).read().decode()
@@ -69,11 +69,26 @@ for l in content.splitlines():
                     bd = None
             # otherwise it's an explicit package name
 
+            commit = c.get('commit', None)
+            if commit:
+                if re.match(r'^[0-9a-fA-F]*$', commit):
+                    # looks like a hash
+                    reference = None
+                else:
+                    # looks like a branch or tag reference
+                    reference = commit
+                    commit = None
+            else:
+                # otherwise omitted, and script will default to master
+                reference = None
+                commit = None
+
             projects.append(Project(name = name,
                                     repo = c.get('repo-url', url),
                                     builddep = bd,
                                     alsoinstall = c.get('install', []),
-                                    branch = c.get('commit', None),
+                                    branch = reference,
+                                    commit = commit,
                                     sourcedir = c.get('sourcedir', None),
                                     hacks = c.get('extra-commands', None)))
 
@@ -86,6 +101,7 @@ with open(os.path.join(scriptdir, "template.yaml")) as f:
 
 matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo]
                    + (['BRANCH=%s' % p.branch] if p.branch else [])
+                   + (['COMMIT=%s' % p.commit] if p.commit else [])
                    + (['BUILDDEP=%s' % p.builddep] if p.builddep else [])
                    + (['ALSOINSTALL="%s"' % ' '.join(p.alsoinstall)] if p.alsoinstall else [])
                    + (['SOURCEDIR=%s' % p.sourcedir] if p.sourcedir else [])
