@@ -12,13 +12,13 @@ install:
 
 before_script:
   - touch script
-  - if test -n "${BUILDDEP}" ; then echo "apt-get -y build-dep ${BUILDDEP}" >>script ; fi
-  - if test -n "${ALSOINSTALL}" ; then echo "apt-get -y install ${ALSOINSTALL}" >>script ; fi
-  - echo "pip3 install git+https://github.com/mesonbuild/meson.git" >>script
-  - if test -n "${COMMIT}" ; then echo "git clone ${REPO} ${NAME}; git -C ${NAME} checkout ${COMMIT}" >>script ; fi
-  - if test -z "${COMMIT}" ; then echo "git clone --depth=10 --branch ${BRANCH:-master} ${REPO} ${NAME}" >>script ; fi
-  - echo "cd ${NAME}" >>script
-  - if test -n "${HACKS}" ; then echo "${HACKS}" >>script ; fi
+  - if test -n "${BUILDDEP}" ; then echo "apt-get -y build-dep ${BUILDDEP} &&" >>script ; fi
+  - if test -n "${ALSOINSTALL}" ; then echo "apt-get -y install ${ALSOINSTALL} &&" >>script ; fi
+  - echo "pip3 install git+https://github.com/mesonbuild/meson.git &&" >>script
+  - if test -n "${COMMIT}" ; then echo "git clone ${REPO} ${NAME} && git -C ${NAME} checkout ${COMMIT} &&" >>script ; fi
+  - if test -z "${COMMIT}" ; then echo "git clone --depth=10 --branch ${BRANCH:-master} ${REPO} ${NAME} &&" >>script ; fi
+  - echo "cd ${NAME} && " >>script
+  - if test -n "${HACKS}" ; then echo "${HACKS} &&" >>script ; fi
   - echo "meson _build ${SOURCEDIR}" >>script
 
 script:

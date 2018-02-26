@@ -74,6 +74,7 @@ fwupd:
   install:
   - libjson-glib-dev
   - help2man
+  - valac
 
 geary:
   install:
