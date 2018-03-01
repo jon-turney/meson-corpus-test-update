@@ -309,6 +309,8 @@ xi-gtk:
 xorg:
   builddep: xorg-server
   repo-url: git://anongit.freedesktop.org/xorg/xserver/
+  # pin at the commit before xorgproto is required, which isn't packaged for artful
+  commit: fabbaa8d6260da14fe5b7ca0f3f8748af16253a2
 
 zstandard:
   builddep: zstd
