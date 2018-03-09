@@ -19,6 +19,7 @@ import yaml
 parser = argparse.ArgumentParser('meson corupus test updater tool')
 parser.add_argument('conf', help='configuration file', metavar='CONFFILE')
 parser.add_argument('yml', help='.travis.yml output file', metavar='TRAVISFILE')
+parser.add_argument('commit', help='meson commit to use', metavar='COMMIT', nargs='?')
 
 args = parser.parse_args()
 
@@ -100,6 +101,7 @@ with open(os.path.join(scriptdir, "template.yaml")) as f:
     output = yaml.load(f)
 
 matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo]
+                   + (['MESON_COMMIT=%s' % args.commit] if args.commit else [])
                    + (['BRANCH=%s' % p.branch] if p.branch else [])
                    + (['COMMIT=%s' % p.commit] if p.commit else [])
                    + (['BUILDDEP=%s' % p.builddep] if p.builddep else [])
