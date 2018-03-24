@@ -12,6 +12,7 @@ install:
 
 before_script:
   - touch script
+  - echo "apt-get -y update &&" >>script
   - if test -n "${BUILDDEP}" ; then echo "apt-get -y build-dep ${BUILDDEP} &&" >>script ; fi
   - if test -n "${ALSOINSTALL}" ; then echo "apt-get -y install ${ALSOINSTALL} &&" >>script ; fi
   - echo "pip3 install git+https://github.com/mesonbuild/meson.git &&" >>script
