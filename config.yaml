@@ -39,6 +39,7 @@ budgie-desktop:
   - libupower-glib-dev
   - libgnome-bluetooth-dev
   - gtk-doc-tools
+  - gnome-settings-daemon-dev
 
 casync:
   install:
