@@ -76,6 +76,8 @@ fwupd:
   - libjson-glib-dev
   - help2man
   - valac
+  # pin at commit before appstream-glib>=0.7.4 required, not in artful
+  commit: 693497b961803f776110dad0267627d871720dd6
 
 geary:
   install:
