@@ -19,6 +19,16 @@
 arduino-sample-project:
   blacklisted: 'need to work out how to setup cross-env'
 
+bolt:
+  builddep: false
+  install:
+  - libglib2.0-dev
+  - libudev-dev
+  - udev
+  - libpolkit-gobject-1-dev
+  - systemd
+  - libsystemd-dev
+
 budgie-desktop:
   builddep: false
   install:
