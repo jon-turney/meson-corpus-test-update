@@ -139,6 +139,8 @@ gvfs:
   install:
   - libbluray-dev
   - libnfs-dev
+  # pin at commit before polkit-gobject-1 >= 0.114 required, not in artful
+  commit: 3a7bb06be72fc62b4ec524afe67febf0f529066d
 
 hardcode-tray:
   builddep: false
