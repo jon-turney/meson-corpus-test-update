@@ -100,6 +100,7 @@ glib:
 gnome-boxes:
   install:
   - libwebkit2gtk-4.0-dev
+  - freerdp2-dev
 
 gnome-builder:
   blacklisted: 'needs a later libdazzle than in artful'
