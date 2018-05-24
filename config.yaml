@@ -200,6 +200,12 @@ libhttpseverywhere:
 libosmscout:
   builddep: false
 
+libspng:
+  builddep: false
+  install:
+  - zlib1g-dev
+  - libpng-dev
+
 libzim:
   builddep: zimlib
 
