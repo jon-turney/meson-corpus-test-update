@@ -50,6 +50,8 @@ budgie-desktop:
   - libgnome-bluetooth-dev
   - gtk-doc-tools
   - gnome-settings-daemon-dev
+  # pin at commit before vapigen>=0.40.0 required, not in artful
+  commit: c5295589049f7b76f1ff2aea28c84e4ed78897b5
 
 casync:
   install:
