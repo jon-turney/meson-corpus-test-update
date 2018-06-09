@@ -105,6 +105,8 @@ gnome-boxes:
   install:
   - libwebkit2gtk-4.0-dev
   - freerdp2-dev
+  # https://gitlab.gnome.org/GNOME/gnome-boxes/issues/218
+  extra-commands: sed -i -E \"s!pkg(data|lib)dir=!\1dir=!\" src/meson.build
 
 gnome-builder:
   blacklisted: 'needs a later libdazzle than in artful'
