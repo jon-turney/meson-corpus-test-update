@@ -13,15 +13,24 @@ import corpuslib
 parser = argparse.ArgumentParser('meson corpus test run tool')
 parser.add_argument('--commit', help='meson commit to use', metavar='COMMIT')
 parser.add_argument('--no-failfast', dest='failfast', action='store_false', help='do not stop on first failure')
+parser.add_argument('project', help='projects to test', metavar='PROJECT', nargs='*')
 
 args = parser.parse_args()
 
 projects = corpuslib.fetch_project_list()
 
+unknown = set.difference(set(args.project), set([p.name for p in projects]))
+if unknown:
+    print('unknown projects: %s' % ', '.join(sorted(unknown)))
+    sys.exit(1)
+
 os.system('docker pull jturney/mesoncorpusci')
 
 fail = False
 for p in projects:
+    if args.project and p.name not in args.project:
+        continue
+
     if not p.branch:
         branch = 'master'
     else:
