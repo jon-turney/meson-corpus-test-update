@@ -5,6 +5,7 @@
 import collections
 import os
 import re
+import shlex
 import sys
 import urllib.request
 import yaml
@@ -81,3 +82,10 @@ def fetch_project_list():
                                         hacks = c.get('extra-commands', None)))
 
     return projects
+
+def shell_protect(s):
+    # multiple commands in a subshell is too hard
+    if s.startswith('('):
+        return '"' + s + '"';
+
+    return shlex.quote(s)

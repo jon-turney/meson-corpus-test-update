@@ -43,7 +43,7 @@ matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo]
                    + (['BUILDDEP=%s' % p.builddep] if p.builddep else [])
                    + (['ALSOINSTALL="%s"' % ' '.join(p.alsoinstall)] if p.alsoinstall else [])
                    + (['SOURCEDIR=%s' % p.sourcedir] if p.sourcedir else [])
-                   + (['HACKS="%s"' % p.hacks] if p.hacks else [])} for p in projects]
+                   + (['HACKS=%s' % corpuslib.shell_protect(p.hacks)] if p.hacks else [])} for p in projects]
 
 output['matrix'] = {'include': matrix}
 

@@ -106,7 +106,7 @@ gnome-boxes:
   - libwebkit2gtk-4.0-dev
   - freerdp2-dev
   # https://gitlab.gnome.org/GNOME/gnome-boxes/issues/218
-  extra-commands: sed -i -E \"s!pkg(data|lib)dir=!\1dir=!\" src/meson.build
+  extra-commands: sed -i -E 's!pkg(data|lib)dir=!\1dir=!' src/meson.build
 
 gnome-builder:
   blacklisted: 'needs a later libdazzle than in artful'
@@ -217,7 +217,7 @@ lightdm-webkit2-greeter:
   builddep: false
   commit: stable
   # fix for building in something other than ./build
-  extra-commands: sed -i \"s!'@0@/utils.sh'.format(meson.build_root())!join_paths(meson.source_root(), 'build/utils.sh')!\" src/meson.build
+  extra-commands: sed -i "s!'@0@/utils.sh'.format(meson.build_root())!join_paths(meson.source_root(), 'build/utils.sh')!" src/meson.build
   install:
   - libdbus-glib-1-dev
   - liblightdm-gobject-1-dev
