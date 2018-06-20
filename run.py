@@ -6,6 +6,7 @@
 
 import argparse
 import os
+import shlex
 import sys
 
 import corpuslib
@@ -42,7 +43,14 @@ for p in projects:
     else:
         sourcedir = p.sourcedir
 
-    cmds = ['chronic apt-get -y update']
+    cmds = []
+
+    if os.path.exists('/etc/apt/apt.conf.d/01proxy'):
+        with open('/etc/apt/apt.conf.d/01proxy') as f:
+            proxy = f.read()
+        cmds.append('echo {} >/etc/apt/apt.conf.d/01proxy'.format(shlex.quote(proxy)))
+
+    cmds.append('chronic apt-get -y update')
 
     if p.builddep:
         cmds.append('chronic apt-get -y build-dep {}'.format(p.builddep))
@@ -73,11 +81,14 @@ for p in projects:
 
     cmds.append('meson _build {}'.format(sourcedir))
 
-    cmd = ' && '.join(cmds)
+    cmd = ' &&\n'.join(cmds)
     if args.interactive:
         cmd += ' || bash'
 
-    fail = (os.system('docker run -it --rm jturney/mesoncorpusci /bin/sh -c "%s"' % cmd) != 0) or fail
+    with open('script', 'w') as f:
+        print(cmd, file=f)
+
+    fail = (os.system('docker run -it --rm jturney/mesoncorpusci /bin/sh -c "$(cat script)"') != 0) or fail
 
     if fail and args.failfast:
         break
