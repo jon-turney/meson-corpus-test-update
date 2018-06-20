@@ -19,6 +19,7 @@ parser = argparse.ArgumentParser('meson corpus test updater tool')
 parser.add_argument('conf', help='configuration file', metavar='CONFFILE')
 parser.add_argument('yml', help='.travis.yml output file', metavar='TRAVISFILE')
 parser.add_argument('commit', help='meson commit to use', metavar='COMMIT', nargs='?')
+parser.add_argument('--build', dest='build', action='store_true', help='build as well as generate')
 
 args = parser.parse_args()
 
@@ -43,6 +44,7 @@ matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo]
                    + (['BUILDDEP=%s' % p.builddep] if p.builddep else [])
                    + (['ALSOINSTALL="%s"' % ' '.join(p.alsoinstall)] if p.alsoinstall else [])
                    + (['SOURCEDIR=%s' % p.sourcedir] if p.sourcedir else [])
+                   + (['BUILD=yes'] if args.build else [])
                    + (['HACKS=%s' % corpuslib.shell_protect(p.hacks)] if p.hacks else [])} for p in projects]
 
 output['matrix'] = {'include': matrix}

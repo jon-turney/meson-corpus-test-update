@@ -21,7 +21,9 @@ before_script:
   - if test -z "${COMMIT}" ; then echo "retry -- git clone --depth=10 --branch ${BRANCH:-master} ${REPO} ${NAME} &&" >>script ; fi
   - echo "cd ${NAME} && " >>script
   - if test -n "${HACKS}" ; then echo "${HACKS} &&" >>script ; fi
-  - echo "meson _build ${SOURCEDIR}" >>script
+  - echo "meson _build ${SOURCEDIR} &&" >>script
+  - if test -n "${BUILD}" ; then echo "DESTDIR=/install ninja -C _build all test install" >>script ; fi
+  - if test -z "${BUILD}" ; then echo "true" >>script ; fi
 
 script:
   - cat script

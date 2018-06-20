@@ -15,6 +15,7 @@ parser = argparse.ArgumentParser('meson corpus test run tool')
 parser.add_argument('--commit', help='meson commit to use', metavar='COMMIT')
 parser.add_argument('--no-failfast', dest='failfast', action='store_false', help='do not stop on first failure')
 parser.add_argument('--interactive', dest='interactive', action='store_true', help='run an interactive shell after failure')
+parser.add_argument('--build', dest='build', action='store_true', help='build as well as generate')
 parser.add_argument('project', help='projects to test', metavar='PROJECT', nargs='*')
 
 args = parser.parse_args()
@@ -80,6 +81,9 @@ for p in projects:
         cmds.append(p.hacks)
 
     cmds.append('meson _build {}'.format(sourcedir))
+
+    if args.build:
+        cmds.append('DESTDIR=/install ninja -C _build all test install')
 
     cmd = ' &&\n'.join(cmds)
     if args.interactive:
