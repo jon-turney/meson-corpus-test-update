@@ -12,9 +12,9 @@ install:
 
 before_script:
   - touch script
-  - echo "apt-get -y update &&" >>script
-  - if test -n "${BUILDDEP}" ; then echo "apt-get -y build-dep ${BUILDDEP} &&" >>script ; fi
-  - if test -n "${ALSOINSTALL}" ; then echo "apt-get -y install ${ALSOINSTALL} &&" >>script ; fi
+  - echo "chronic apt-get -y update &&" >>script
+  - if test -n "${BUILDDEP}" ; then echo "chronic apt-get -y build-dep ${BUILDDEP} &&" >>script ; fi
+  - if test -n "${ALSOINSTALL}" ; then echo "chronic apt-get -y install ${ALSOINSTALL} &&" >>script ; fi
   - if test -z "${MESON_COMMIT}" ; then echo "retry -- pip3 install git+https://github.com/mesonbuild/meson.git &&" >>script ; fi
   - if test -n "${MESON_COMMIT}" ; then echo "retry -- git clone https://github.com/mesonbuild/meson.git && retry -- git -C meson fetch origin ${MESON_COMMIT} && git -C meson checkout FETCH_HEAD && pip3 install ./meson &&" >>script ; fi
   - if test -n "${COMMIT}" ; then echo "retry -- git clone ${REPO} ${NAME} && git -C ${NAME} checkout ${COMMIT} &&" >>script ; fi

@@ -32,13 +32,13 @@ for p in projects:
     else:
         sourcedir = p.sourcedir
 
-    cmds = ['apt-get -y update']
+    cmds = ['chronic apt-get -y update']
 
     if p.builddep:
-        cmds.append('apt-get -y build-dep {}'.format(p.builddep))
+        cmds.append('chronic apt-get -y build-dep {}'.format(p.builddep))
 
     if p.alsoinstall:
-        cmds.append('apt-get -y install {}'.format(' '.join(p.alsoinstall)))
+        cmds.append('chronic apt-get -y install {}'.format(' '.join(p.alsoinstall)))
 
     if args.commit:
         cmds.append('git clone https://github.com/mesonbuild/meson.git')

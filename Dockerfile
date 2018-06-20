@@ -4,5 +4,5 @@ FROM ubuntu:artful
 RUN sed -i '/^#\sdeb-src /s/^#\s//' /etc/apt/sources.list \
 && apt-get -y update \
 && apt-get -y upgrade \
-&& apt-get -y install build-essential pkg-config ninja-build python3-pip git curl \
+&& apt-get -y install build-essential pkg-config ninja-build python3-pip git curl moreutils \
 && curl https://raw.githubusercontent.com/kadwanev/retry/master/retry -o /usr/local/bin/retry && chmod +x /usr/local/bin/retry
