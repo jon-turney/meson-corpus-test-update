@@ -13,6 +13,7 @@ import corpuslib
 parser = argparse.ArgumentParser('meson corpus test run tool')
 parser.add_argument('--commit', help='meson commit to use', metavar='COMMIT')
 parser.add_argument('--no-failfast', dest='failfast', action='store_false', help='do not stop on first failure')
+parser.add_argument('--interactive', dest='interactive', action='store_true', help='run an interactive shell after failure')
 parser.add_argument('project', help='projects to test', metavar='PROJECT', nargs='*')
 
 args = parser.parse_args()
@@ -72,7 +73,11 @@ for p in projects:
 
     cmds.append('meson _build {}'.format(sourcedir))
 
-    fail = (os.system('docker run -it --rm jturney/mesoncorpusci /bin/sh -c "%s"' % ' && '.join(cmds)) != 0) or fail
+    cmd = ' && '.join(cmds)
+    if args.interactive:
+        cmd += ' || bash'
+
+    fail = (os.system('docker run -it --rm jturney/mesoncorpusci /bin/sh -c "%s"' % cmd) != 0) or fail
 
     if fail and args.failfast:
         break

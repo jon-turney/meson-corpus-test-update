@@ -3,6 +3,9 @@ A tool for testing a corpus of meson builds
 ./run.py runs the test in local docker containers
 ./update.py updates the meson-corpus-test repository
 
+If project PROJ fails in the CI made by update.py, you can try `./run.py PROJECT
+--interactive` to investigate locally.
+
 TODO:
 - I've got away without any projects using a non-default meson configuration, but probably needed eventually
 - Invoke ninja to build/test/install to verify we've generated correctly ?
