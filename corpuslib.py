@@ -28,8 +28,7 @@ def fetch_project_list():
     project_list_url = "https://raw.githubusercontent.com/mesonbuild/meson/master/docs/markdown/Users.md"
     content = urllib.request.urlopen(project_list_url).read().decode()
 
-    projects = []
-
+    urls = {}
     for l in content.splitlines():
         if l.startswith(' - '):
             matches = re.finditer(r'\[(.*?)\]\((.*?)\)', l)
@@ -43,45 +42,54 @@ def fetch_project_list():
                 # workaround freedesktop.org CA not in trusty (?)
                 url = re.sub(r'http(s|)://cgit.freedesktop.org/', r'git://anongit.freedesktop.org/', url)
 
-                c = conf.get(name, None)
-                if not c:
-                    c = {}
+                urls[name] = url
 
-                if 'blacklisted' in c:
-                    continue
+    #
+    # build list of Project namedtuples
+    # (each project might only be in either Users.md or config.yaml)
+    #
 
-                bd = c.get('builddep', True)
-                if type(bd) is bool:
-                    if bd:
-                        # if builddep is absent or True, just use the package name
-                        bd = name
-                    else:
-                        # if builddep is False, it's omitted
-                        bd = None
-                # otherwise it's an explicit package name
+    projects = []
+    for name in sorted(set(urls) | set(conf)):
+            c = conf.get(name, None)
+            if not c:
+                c = {}
 
-                commit = c.get('commit', None)
-                if commit:
-                    if re.match(r'^[0-9a-fA-F]*$', commit):
-                        # looks like a hash
-                        reference = None
-                    else:
-                        # looks like a branch or tag reference
-                        reference = commit
-                        commit = None
+            if 'blacklisted' in c:
+                continue
+
+            bd = c.get('builddep', True)
+            if type(bd) is bool:
+                if bd:
+                    # if builddep is absent or True, just use the package name
+                    bd = name
                 else:
-                    # otherwise omitted, and script will default to master
-                    reference = None
-                    commit = None
+                    # if builddep is False, it's omitted
+                    bd = None
+            # otherwise it's an explicit package name
 
-                projects.append(Project(name = name,
-                                        repo = c.get('repo-url', url),
-                                        builddep = bd,
-                                        alsoinstall = c.get('install', []),
-                                        branch = reference,
-                                        commit = commit,
-                                        sourcedir = c.get('sourcedir', None),
-                                        hacks = c.get('extra-commands', None)))
+            commit = c.get('commit', None)
+            if commit:
+                if re.match(r'^[0-9a-fA-F]*$', commit):
+                    # looks like a hash
+                    reference = None
+                else:
+                    # looks like a branch or tag reference
+                    reference = commit
+                    commit = None
+            else:
+                # otherwise omitted, and script will default to master
+                reference = None
+                commit = None
+
+            projects.append(Project(name = name,
+                                    repo = c.get('repo-url', urls.get(name, 'unknown-url')),
+                                    builddep = bd,
+                                    alsoinstall = c.get('install', []),
+                                    branch = reference,
+                                    commit = commit,
+                                    sourcedir = c.get('sourcedir', None),
+                                    hacks = c.get('extra-commands', None)))
 
     return projects
 
