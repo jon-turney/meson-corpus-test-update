@@ -50,8 +50,6 @@ budgie-desktop:
   - libgnome-bluetooth-dev
   - gtk-doc-tools
   - gnome-settings-daemon-dev
-  # pin at commit before vapigen>=0.40.0 required, not in artful
-  commit: c5295589049f7b76f1ff2aea28c84e4ed78897b5
 
 casync:
   install:
@@ -88,15 +86,12 @@ fwupd:
   - libjson-glib-dev
   - help2man
   - valac
-  # pin at commit before appstream-glib>=0.7.4 required, not in artful
-  commit: 693497b961803f776110dad0267627d871720dd6
 
 geary:
   install:
   - libunwind-dev
+  - libgoa-1.0-dev
   repo-url: https://git.gnome.org/browse/geary
-  # pin at commit before gtk+-3.0>=3.22.26 required, not in artful
-  commit: 43341cd3e399155c38afb9efa630b5d48988ee5d
 
 glib:
   builddep: glib2.0
@@ -157,7 +152,7 @@ gvfs:
   install:
   - libbluray-dev
   - libnfs-dev
-  # pin at commit before polkit-gobject-1 >= 0.114 required, not in artful
+  # pin at commit before polkit-gobject-1 >= 0.114 required, not in bionic
   commit: 3a7bb06be72fc62b4ec524afe67febf0f529066d
 
 hardcode-tray:
@@ -245,9 +240,8 @@ miraclecast:
 nautilus:
   install:
   - libgexiv2-dev
+  - libseccomp-dev
   repo-url: https://gitlab.gnome.org/GNOME/nautilus.git
-  # later than this requires gtk+-3.0 3.22.26, not in artful
-  commit: d5e7c6234e33905f30d474240f6c327a278ca470
 
 nemo:
   install:
@@ -358,8 +352,6 @@ xi-gtk:
 xorg:
   builddep: xorg-server
   repo-url: git://anongit.freedesktop.org/xorg/xserver/
-  # pin at the commit before xorgproto is required, which isn't packaged for artful
-  commit: fabbaa8d6260da14fe5b7ca0f3f8748af16253a2
 
 zstandard:
   builddep: zstd
