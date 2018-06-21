@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+# update the docker container, if the Dockerfile has changed
+srcdir=`dirname "$0"`
+if ! cmp -s ${srcdir}/Dockerfile ${srcdir}/Dockerfile.prev ; then
+  cp ${srcdir}/Dockerfile ${srcdir}/Dockerfile.prev
+  docker rmi mesoncorpusci jturney/mesoncorpusci || true
+  docker build . -t mesoncorpusci -f ${srcdir}/Dockerfile
+  docker tag mesoncorpusci jturney/mesoncorpusci
+  echo $DOCKERHUB_PASSWORD | docker login --username jturney --password-stdin || true
+  docker push jturney/mesoncorpusci
+fi
