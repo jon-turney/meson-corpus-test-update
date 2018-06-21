@@ -44,7 +44,7 @@ budgie-desktop:
   - libpulse-dev
   - sassc
   - libpolkit-agent-1-dev
-  - libmutter-1-dev
+  - libmutter-2-dev
   - libgnome-menu-3-dev
   - libupower-glib-dev
   - libgnome-bluetooth-dev

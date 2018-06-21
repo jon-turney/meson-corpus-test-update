@@ -1,4 +1,6 @@
-FROM ubuntu:artful
+FROM ubuntu:bionic
+
+ENV DEBIAN_FRONTEND noninteractive
 
 # uncomment source URIs in sources.lst so metadata required by 'apt-get build-dep' is present
 RUN sed -i '/^#\sdeb-src /s/^#\s//' /etc/apt/sources.list \
