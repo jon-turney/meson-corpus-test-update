@@ -81,7 +81,7 @@ emeus:
   - libgirepository1.0-dev
 
 frida:
-  blacklisted: 'find where the meson.build is at ?!?'
+  blacklisted: 'repo-url is for frida-core, make a meson.build of frida using subprojects'
 
 fwupd:
   install:
@@ -109,7 +109,7 @@ gnome-boxes:
   extra-commands: sed -i -E 's!pkg(data|lib)dir=!\1dir=!' src/meson.build
 
 gnome-builder:
-  blacklisted: 'needs a later libdazzle than in artful'
+  blacklisted: 'needs a later libdazzle than in bionic'
 
 gnome-recipes:
   install:
@@ -117,7 +117,6 @@ gnome-recipes:
   - libjson-glib-dev
 
 gnome-software:
-  blacklisted: 'needs a later appstream-glib than in artful'
 
 gnome-usage:
   builddep: false
@@ -141,7 +140,9 @@ gstreamer:
   repo-url: git://anongit.freedesktop.org/gstreamer/gstreamer/
 
 gtk+:
-  blacklisted: 'needs a later glib than in artful (?)'
+  builddep: libgtk-3-dev
+  # pin at commit before pango >= 1.14.0 required, not in bionic
+  commit: 894a0c0f
 
 gtkdapp:
   builddep: false
@@ -177,7 +178,11 @@ jsoncpp:
   builddep: false
 
 kiwix-libraries:
-  blacklisted: 'needs a later libzim than in artful'
+  builddep: false
+  install:
+  - libicu-dev
+  - libzim-dev
+  blacklisted: 'needs libzim >= 4.0.0, not in bionic'
 
 libdrm:
   repo-url: git://anongit.freedesktop.org/drm/libdrm/
@@ -188,7 +193,8 @@ libfuse:
   builddep: fuse
 
 libgit2-glib:
-  blacklisted: 'needs a later libgit2 than in artful'
+  install:
+  - python-gi-dev
 
 libhttpseverywhere:
   builddep: false
@@ -225,7 +231,9 @@ lightdm-webkit2-greeter:
   - libwebkit2gtk-4.0-dev
 
 mesa:
-  blacklisted: 'needs later deps than in artful'
+  install:
+  - libxvmc-dev
+  blacklisted: 'needs some configuration'
 
 miraclecast:
   builddep: false
@@ -274,14 +282,14 @@ pithos:
   - libglib2.0-dev
 
 pitivi:
-  blacklisted: 'needs a later gstreamer-1.0 than in artful'
 
 radare2:
   # yes, I threw up in my mouth, a bit...
   extra-commands: (cd shlr; ./capstone.sh https://github.com/aquynh/capstone.git next)
 
 sshfs:
-  blacklisted: 'needs a later libfuse than in artful'
+  # pin at commit before libfuse3 required, not in bionic
+  commit: 6cc86fc0bdaaeacfb1bd5e4336f2a2d1e5b189b8
 
 sysprof:
   install:
@@ -325,7 +333,20 @@ wayland-and-weston:
   repo-url: git://anongit.freedesktop.org/wayland/libinput
 
 wlroots:
-  blacklisted: 'needs a later wayland-protocols than in artful'
+  builddep: false
+  install:
+  - libegl1-mesa-dev
+  - libgbm-dev
+  - libgles2-mesa-dev
+  - libinput-dev
+  - libpixman-1-dev
+  - libwayland-dev
+  - libxcb-composite0-dev
+  - libxcb-image0-dev
+  - libxkbcommon-dev
+  - wayland-protocols
+  # pin at commit before wayland-protocols >= 1.14 required, not in bionic
+  commit: f1fcc685b62d5c37c3b99ce6bfeb11ac1fa59ea6
 
 xi-gtk:
   builddep: false
