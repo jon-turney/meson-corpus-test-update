@@ -1,20 +1,26 @@
+## MESON CORPUS TEST
+
 A tool for testing a corpus of meson builds
 
-./run.py runs the test in local docker containers
-./update.py updates the meson-corpus-test repository
+`run` runs the test in local docker containers
 
-If project PROJ fails in the CI made by update.py, you can try `./run.py PROJECT
---interactive` to investigate locally.
+`update` writes a .travis.yml CI configuration
 
-TODO:
+`update` is intended to be used by `cronscript` to update the
+`meson-corpus-test` repository.
+
+If project _PROJ_ fails in CI, you can try `./run PROJ --interactive` to
+investigate locally.
+
+### TODO:
 - I've got away without any projects using a non-default meson configuration, but probably needed eventually
 - Invoke ninja to build/test/install to verify we've generated correctly ?
 - Since we're always providing all builddeps, we're not exercising fallbacks
 - Pin to a specific git commit (not bleeding edge so artful can satisify builddeps & to avoid false reports due to upstream breakage)
 
-PACKAGE CACHEING
+### PACKAGE CACHING
 
-./run.py transfers any `/etc/apt/apt.conf.d/01proxy` file to the container.  Set
+`run` transfers any `/etc/apt/apt.conf.d/01proxy` file to the container.  Set
 this to point to a local apt-cacher instance to avoid repeatedly downloading the
 same packages.
 

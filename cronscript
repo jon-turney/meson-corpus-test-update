@@ -22,7 +22,7 @@ fi
 # update the .travis.yml
 DATE=`date -u +%Y%m%d`
 git checkout ${PR:-master} || git checkout -b ${PR:-master}
-${srcdir}/update.py ${srcdir}/config.yaml .travis.yml ${MESON_COMMIT}
+${srcdir}/update ${srcdir}/config.yaml .travis.yml ${MESON_COMMIT}
 
 if ! git diff --quiet 2>/dev/null ; then
   git add .travis.yml
