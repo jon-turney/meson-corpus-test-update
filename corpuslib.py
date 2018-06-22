@@ -43,7 +43,9 @@ def fetch_project_list():
                 # workaround freedesktop.org CA not in trusty (?)
                 url = re.sub(r'http(s|)://cgit.freedesktop.org/', r'git://anongit.freedesktop.org/', url)
 
-                c = conf.get(name, {})
+                c = conf.get(name, None)
+                if not c:
+                    c = {}
 
                 if 'blacklisted' in c:
                     continue
