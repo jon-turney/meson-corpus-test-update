@@ -10,7 +10,7 @@ import sys
 import urllib.request
 import yaml
 
-def fetch_project_list():
+def fetch_project_list(skip_blacklisted=True):
     #
     # read configuration file
     #
@@ -55,7 +55,7 @@ def fetch_project_list():
             if not c:
                 c = {}
 
-            if 'blacklisted' in c:
+            if 'blacklisted' in c and skip_blacklisted:
                 continue
 
             bd = c.get('builddep', True)

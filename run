@@ -20,7 +20,7 @@ parser.add_argument('project', help='projects to test', metavar='PROJECT', nargs
 
 args = parser.parse_args()
 
-projects = corpuslib.fetch_project_list()
+projects = corpuslib.fetch_project_list(skip_blacklisted=False if args.project else True)
 
 unknown = set.difference(set(args.project), set([p.name for p in projects]))
 if unknown:
