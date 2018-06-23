@@ -14,6 +14,7 @@
 # commit:               git branch, tag, or commit-id, otherwise master is used
 # extra-commands:       extra commands to execute before build
 # sourcedir:            source directory containing meson.build, if not root of checkout
+# config:               project configuration options to be passed to meson
 #
 
 arduino-sample-project:

@@ -13,10 +13,9 @@ If project _PROJ_ fails in CI, you can try `./run PROJ --interactive` to
 investigate locally.
 
 ### TODO:
-- I've got away without any projects using a non-default meson configuration, but probably needed eventually
 - Invoke ninja to build/test/install to verify we've generated correctly ?
-- Since we're always providing all builddeps, we're not exercising fallbacks
-- Pin to a specific git commit (not bleeding edge so artful can satisify builddeps & to avoid false reports due to upstream breakage)
+- Since we're always providing all builddeps, we're not exercising fallbacks (use forcefallback?)
+- Pin to a specific git commit (not bleeding edge so bionic can satisify builddeps & to avoid false reports due to upstream breakage)
 
 ### PACKAGE CACHING
 

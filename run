@@ -44,6 +44,11 @@ for p in projects:
     else:
         sourcedir = p.sourcedir
 
+    if not p.config:
+        config = ''
+    else:
+        config = p.config
+
     cmds = []
 
     if os.path.exists('/etc/apt/apt.conf.d/01proxy'):
@@ -80,7 +85,7 @@ for p in projects:
     if p.hacks:
         cmds.append(p.hacks)
 
-    cmds.append('meson _build {}'.format(sourcedir))
+    cmds.append('meson _build {} {}'.format(sourcedir, config))
 
     if args.build:
         cmds.append('DESTDIR=/install ninja -C _build all test install')
