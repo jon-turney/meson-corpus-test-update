@@ -103,7 +103,10 @@ gnome-boxes:
   - freerdp2-dev
 
 gnome-builder:
-  blacklisted: 'needs a later libdazzle than in bionic'
+  # pin before libdazzle >= 3.29 required, not in bionic
+  commit: 3.28.3
+  # spellcheck uses enchant2, not in bionic
+  config: -Dwith_spellcheck=false
 
 gnome-recipes:
   install:
@@ -225,8 +228,10 @@ lightdm-webkit2-greeter:
 
 mesa:
   install:
+  - libegl1-mesa-dev
   - libxvmc-dev
-  blacklisted: 'needs some configuration'
+  # pin at commit before wayland needs to provide wayland-egl-backend (>= 1.15?), not in bionic
+  commit: cb03803253b026d5f4c1e0fef431a12df461e6d8
 
 miraclecast:
   builddep: false
