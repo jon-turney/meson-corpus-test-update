@@ -22,7 +22,7 @@ before_script:
   - echo "cd ${NAME} && " >>script
   - if test -n "${HACKS}" ; then echo "${HACKS} &&" >>script ; fi
   - echo "meson _build ${SOURCEDIR} ${CONFIG} &&" >>script
-  - if test -n "${BUILD}" ; then echo "DESTDIR=/install ninja -C _build all test install" >>script ; fi
+  - if test -n "${BUILD}" ; then echo "DESTDIR=/install ninja -C _build ${BUILD}" >>script ; fi
   - if test -z "${BUILD}" ; then echo "true" >>script ; fi
 
 script:

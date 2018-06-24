@@ -13,9 +13,9 @@ If project _PROJ_ fails in CI, you can try `./run PROJ --interactive` to
 investigate locally.
 
 ### TODO:
-- Invoke ninja to build/test/install to verify we've generated correctly ?
 - Since we're always providing all builddeps, we're not exercising fallbacks (use forcefallback?)
 - Pin to a specific git commit (not bleeding edge so bionic can satisify builddeps & to avoid false reports due to upstream breakage)
+- Add 'test' to ninja targets built
 
 ### PACKAGE CACHING
 

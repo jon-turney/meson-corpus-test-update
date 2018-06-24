@@ -15,6 +15,7 @@
 # extra-commands:       extra commands to execute before build
 # sourcedir:            source directory containing meson.build, if not root of checkout
 # config:               project configuration options to be passed to meson
+# build:                targets to build (default: all install), or false to skip
 #
 
 arduino-sample-project:
@@ -51,6 +52,7 @@ budgie-desktop:
   - libgnome-bluetooth-dev
   - gtk-doc-tools
   - gnome-settings-daemon-dev
+  build: false
 
 casync:
   install:
@@ -68,6 +70,7 @@ dbus-broker:
 dpdk:
   builddep: false
   repo-url: git://dpdk.org/dpdk
+  build: false
 
 dxvk:
   blacklisted: 'need to work out how to install vulcan devkit'
@@ -78,6 +81,7 @@ emeus:
   - libglib2.0-dev
   - libgtk-3-dev
   - libgirepository1.0-dev
+  build: false
 
 fractal:
   builddep: false
@@ -109,10 +113,12 @@ geary:
   install:
   - libunwind-dev
   - libgoa-1.0-dev
+  - itstool
   repo-url: https://git.gnome.org/browse/geary
 
 glib:
   builddep: glib2.0
+  build: false
 
 gnome-boxes:
   install:
@@ -124,6 +130,7 @@ gnome-builder:
   commit: 3.28.3
   # spellcheck uses enchant2, not in bionic
   config: -Dwith_spellcheck=false
+  build: false
 
 gnome-recipes:
   install:
@@ -131,6 +138,9 @@ gnome-recipes:
   - libjson-glib-dev
 
 gnome-software:
+
+gnome-twitch:
+  build: false
 
 gnome-usage:
   builddep: false
@@ -157,6 +167,7 @@ gtk+:
   builddep: libgtk-3-dev
   # pin at commit before pango >= 1.14.0 required, not in bionic
   commit: 894a0c0f
+  build: false
 
 gtkdapp:
   builddep: false
@@ -166,6 +177,7 @@ gtkdapp:
   - gsettings-desktop-schemas-dev
   - libglib2.0-dev
   - gettext
+  build: false
 
 gvfs:
   install:
@@ -201,6 +213,9 @@ kiwix-libraries:
 libdrm:
   repo-url: git://anongit.freedesktop.org/drm/libdrm/
 
+libepoxy:
+  build: false
+
 libfuse:
   install:
   - udev
@@ -220,6 +235,7 @@ libhttpseverywhere:
   - libarchive-dev
   - gobject-introspection
   repo-url: https://git.gnome.org/browse/libhttpseverywhere
+  build: false
 
 libosmscout:
   builddep: false
@@ -249,6 +265,7 @@ mesa:
   - libxvmc-dev
   # pin at commit before wayland needs to provide wayland-egl-backend (>= 1.15?), not in bionic
   commit: cb03803253b026d5f4c1e0fef431a12df461e6d8
+  build: false
 
 miraclecast:
   builddep: false
@@ -256,6 +273,7 @@ miraclecast:
   - libudev-dev
   - libglib2.0-dev
   - libsystemd-dev
+  build: false
 
 nautilus:
   install:

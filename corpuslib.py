@@ -23,7 +23,7 @@ def fetch_project_list(skip_blacklisted=True):
     # fetch project list, extract projects
     #
 
-    Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'commit', 'builddep', 'alsoinstall', 'sourcedir', 'hacks', 'config'])
+    Project = collections.namedtuple('Project', ['name', 'repo', 'branch', 'commit', 'builddep', 'alsoinstall', 'sourcedir', 'hacks', 'config', 'build'])
 
     project_list_url = "https://raw.githubusercontent.com/mesonbuild/meson/master/docs/markdown/Users.md"
     content = urllib.request.urlopen(project_list_url).read().decode()
@@ -91,6 +91,7 @@ def fetch_project_list(skip_blacklisted=True):
                                     sourcedir = c.get('sourcedir', None),
                                     hacks = c.get('extra-commands', None),
                                     config = c.get('config', None),
+                                    build = c.get('build', 'all install'),
             ))
 
     return projects
