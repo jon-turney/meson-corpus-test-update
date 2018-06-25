@@ -79,6 +79,23 @@ emeus:
   - libgtk-3-dev
   - libgirepository1.0-dev
 
+fractal:
+  builddep: false
+  repo-url: https://gitlab.gnome.org/World/fractal.git
+  install:
+  - cargo
+  - gettext
+  - libatk1.0-dev
+  - libcariro2-dev
+  - libdbus-1-dev
+  - libgdk-pixbuf2.0-dev
+  - libgspell-1-dev
+  - libgtk-3-dev
+  - libpango1.0-dev
+  - libssl-dev
+  - rustc
+  blacklisted: 'requires gspell >= 1.8; just wraps cargo-build'
+
 frida:
   blacklisted: 'repo-url is for frida-core, make a meson.build of frida using subprojects'
 
