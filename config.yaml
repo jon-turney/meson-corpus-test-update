@@ -105,9 +105,12 @@ frida:
 
 fwupd:
   install:
+  - gnu-efi
   - libjson-glib-dev
   - help2man
   - valac
+  # pin at a working commit before efiboot required, not packaged in bionic
+  commit: cff980cfda882939b5a3a5c2baadb657d5dbb051
 
 geary:
   install:
@@ -162,6 +165,8 @@ grilo-plugins:
 gstreamer:
   builddep: gstreamer1.0
   repo-url: git://anongit.freedesktop.org/gstreamer/gstreamer/
+  # install fails in non-UTF8 locale due to encoding issue in gtkdochelper.py
+  build: all
 
 gtk+:
   builddep: libgtk-3-dev
@@ -336,8 +341,8 @@ szl:
 taisei-project:
   builddep: false
   install:
+  - libfreetype6-dev
   - libsdl2-dev
-  - libsdl2-ttf-dev
   - libsdl2-image-dev
   - libpng-dev
   - python-docutils
@@ -395,3 +400,4 @@ zstandard:
   builddep: zstd
   repo-url: https://github.com/facebook/zstd.git
   sourcedir: contrib/meson
+  commit: v1.3.4
