@@ -83,6 +83,9 @@ emeus:
   - libgirepository1.0-dev
   build: false
 
+fedora-project:
+  blacklisted: 'not a package'
+
 fractal:
   builddep: false
   repo-url: https://gitlab.gnome.org/World/fractal.git
@@ -241,6 +244,18 @@ libhttpseverywhere:
   - gobject-introspection
   repo-url: https://git.gnome.org/browse/libhttpseverywhere
   build: false
+
+libmodulemd:
+  builddep: false
+  install:
+  - clang-format
+  - gobject-introspection
+  - gtk-doc-tools
+  - libgirepository1.0-dev
+  - libglib2.0-dev
+  - libyaml-dev
+  - python-autopep8
+  - valgrind
 
 libosmscout:
   builddep: false
