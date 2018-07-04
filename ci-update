@@ -8,7 +8,7 @@ if [ -n "${PR}" ] ; then
     MESON_COMMIT="pull/${PR}/head"
 fi
 
-git checkout ${PR:-master} || git checkout -b ${PR:-master}
+git checkout ${PR:-master} >/dev/null 2>&1 || git checkout -b ${PR:-master}
 
 srcdir=`dirname "$0"`
 ${srcdir}/update ${srcdir}/config.yaml .travis.yml ${MESON_COMMIT}
