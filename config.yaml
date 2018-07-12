@@ -83,6 +83,9 @@ emeus:
   - libgirepository1.0-dev
   build: false
 
+esp8266-arduino-sample-project:
+  blacklisted: 'need to work out how to setup cross-env'
+
 fedora-project:
   blacklisted: 'not a package'
 
