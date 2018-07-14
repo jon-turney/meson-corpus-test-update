@@ -209,6 +209,8 @@ hexchat:
 
 igt:
   builddep: intel-gpu-tools
+  install:
+  - libssl-dev
   repo-url: git://anongit.freedesktop.org/xorg/app/intel-gpu-tools/
 
 jsoncpp:
