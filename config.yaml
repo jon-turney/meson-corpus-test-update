@@ -147,6 +147,8 @@ gnome-recipes:
   - libjson-glib-dev
 
 gnome-software:
+  # pin before flatpak >= 0.99.3 required, not in bionic
+  commit: 12031b42109892e50b38f4037b923335fdfb0fd0
 
 gnome-twitch:
   build: false
