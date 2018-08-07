@@ -169,6 +169,8 @@ grilo:
 
 grilo-plugins:
   repo-url: https://git.gnome.org/browse/grilo-plugins
+  # pin at commit before grilo >= 0.3.6 required, not in bionic
+  commit: 770b11088c1b99ec979015faf95078c1e0dfe69e
 
 gstreamer:
   builddep: gstreamer1.0
@@ -341,6 +343,11 @@ pithos:
   - libglib2.0-dev
 
 pitivi:
+  blacklisted: 'has unpackaged subproject gst-transcoder, which depends on gstreamer-1.0 > 1.15.0, not in bionic'
+
+polari:
+  # pin at commit before gjs-1.0 1.53.90 required, not in bionic
+  commit: c97477b23361855e22619546a297d7513163bb76
 
 radare2:
   # yes, I threw up in my mouth, a bit...
@@ -389,6 +396,9 @@ wayland-and-weston:
   - libgtk-3-dev
   - check
   - valgrind
+  - python-sphinx
+  - python-sphinx-rtd-theme
+  - python-recommonmark
   repo-url: git://anongit.freedesktop.org/wayland/libinput
 
 wlroots:
