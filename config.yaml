@@ -361,7 +361,7 @@ sshfs:
 sysprof:
   install:
   - systemd
-  repo-url: git://git.gnome.org/sysprof
+  repo-url: https://git.gnome.org/browse/sysprof
 
 szl:
   builddep: false
