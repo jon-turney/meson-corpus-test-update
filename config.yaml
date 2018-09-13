@@ -165,16 +165,13 @@ graphene:
   repo-url: git://github.com/ebassi/graphene
 
 grilo:
-  repo-url: https://git.gnome.org/browse/grilo
 
 grilo-plugins:
-  repo-url: https://git.gnome.org/browse/grilo-plugins
   # pin at commit before grilo >= 0.3.6 required, not in bionic
   commit: 770b11088c1b99ec979015faf95078c1e0dfe69e
 
 gstreamer:
   builddep: gstreamer1.0
-  repo-url: git://anongit.freedesktop.org/gstreamer/gstreamer/
   # install fails in non-UTF8 locale due to encoding issue in gtkdochelper.py
   build: all
 
@@ -216,7 +213,6 @@ igt:
   install:
   - libssl-dev
   - libdw-dev
-  repo-url: git://anongit.freedesktop.org/xorg/app/intel-gpu-tools/
 
 jsoncpp:
   builddep: false
@@ -229,7 +225,6 @@ kiwix-libraries:
   blacklisted: 'needs libzim >= 4.0.0, not in bionic'
 
 libdrm:
-  repo-url: git://anongit.freedesktop.org/drm/libdrm/
 
 libepoxy:
   build: false
@@ -252,7 +247,6 @@ libhttpseverywhere:
   - libgee-0.8-dev
   - libarchive-dev
   - gobject-introspection
-  repo-url: https://git.gnome.org/browse/libhttpseverywhere
   build: false
 
 libmodulemd:
@@ -316,7 +310,6 @@ nemo:
   - libxapp-dev
 
 orc:
-  repo-url: git://anongit.freedesktop.org/gstreamer/orc/
 
 outlier:
   builddep: false
@@ -361,7 +354,6 @@ sshfs:
 sysprof:
   install:
   - systemd
-  repo-url: https://git.gnome.org/browse/sysprof
 
 szl:
   builddep: false
@@ -427,7 +419,6 @@ xi-gtk:
 
 xorg:
   builddep: xorg-server
-  repo-url: git://anongit.freedesktop.org/xorg/xserver/
 
 zstandard:
   builddep: zstd

@@ -82,8 +82,16 @@ def fetch_project_list(skip_blacklisted=True):
                 reference = None
                 commit = None
 
+            repo = c.get('repo-url', None)
+            extracted_repo = urls.get(name, 'unknown-url')
+            if repo:
+                if repo == extracted_repo:
+                    print('pointless repo-url in config.yaml for %s' % name)
+            else:
+                repo = extracted_repo
+
             projects.append(Project(name = name,
-                                    repo = c.get('repo-url', urls.get(name, 'unknown-url')),
+                                    repo = repo,
                                     builddep = bd,
                                     alsoinstall = c.get('install', []),
                                     branch = reference,
