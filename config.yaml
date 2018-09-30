@@ -123,6 +123,7 @@ geary:
   - libunwind-dev
   - libgoa-1.0-dev
   - itstool
+  - libjson-glib-dev
   repo-url: https://git.gnome.org/browse/geary
 
 glib:
