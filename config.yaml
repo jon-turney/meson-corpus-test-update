@@ -355,6 +355,7 @@ sshfs:
 sysprof:
   install:
   - systemd
+  - policykit-1
 
 szl:
   builddep: false
