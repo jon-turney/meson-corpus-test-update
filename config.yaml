@@ -75,6 +75,9 @@ dpdk:
 dxvk:
   blacklisted: 'need to work out how to install vulcan devkit'
 
+elementary-os:
+  blacklisted: 'is a distribution'
+
 emeus:
   builddep: false
   install:
