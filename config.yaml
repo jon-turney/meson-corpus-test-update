@@ -137,6 +137,8 @@ gnome-boxes:
   install:
   - libwebkit2gtk-4.0-dev
   - freerdp2-dev
+  # pin at commit before libvirt-gconfig 2.0 required, not packaged in bionic
+  commit: v3.31.1
 
 gnome-builder:
   # pin before libdazzle >= 3.29 required, not in bionic
