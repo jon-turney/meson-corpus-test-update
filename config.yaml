@@ -374,6 +374,7 @@ taisei-project:
   - libsdl2-dev
   - libsdl2-image-dev
   - libpng-dev
+  - libwebp-dev
   - python-docutils
   repo-url: https://github.com/taisei-project/taisei.git
 
