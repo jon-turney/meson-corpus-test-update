@@ -266,6 +266,8 @@ libmodulemd:
   - libyaml-dev
   - python-autopep8
   - valgrind
+  # workaround assumption in #! line that /usr/bin/sh exists
+  extra-commands: sed -i s!usr/bin/sh!bin/sh! spec_tmpl.sh
 
 libosmscout:
   builddep: false
