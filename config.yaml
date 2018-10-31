@@ -316,6 +316,8 @@ nautilus:
 nemo:
   install:
   - libxapp-dev
+  # pin at commit before xapp >= 1.4.0 required, not in bionic
+  commit: 80672f071742453ec0e84e4a46ec1ab28fe62379
 
 orc:
 
