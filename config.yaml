@@ -213,6 +213,7 @@ hardcode-tray:
 hexchat:
   install:
   - libluajit-5.1-dev
+  - python3-cffi
 
 igt:
   builddep: intel-gpu-tools
