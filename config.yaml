@@ -52,6 +52,7 @@ budgie-desktop:
   - libgnome-bluetooth-dev
   - gtk-doc-tools
   - gnome-settings-daemon-dev
+  - libasound2-dev
   build: false
 
 casync:
