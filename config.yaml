@@ -58,6 +58,7 @@ budgie-desktop:
 casync:
   install:
   - libudev-dev
+  - udev
 
 dbus-broker:
   builddep: false
