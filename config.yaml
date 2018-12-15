@@ -168,6 +168,8 @@ gnome-usage:
   - libgtk-3-dev
   - libgtop2-dev
   - valac
+  # pin before libdazzle required, not in bionic
+  commit: 4272da4d89f3baccf821805fce72e2098579e9db
 
 graphene:
   repo-url: git://github.com/ebassi/graphene
