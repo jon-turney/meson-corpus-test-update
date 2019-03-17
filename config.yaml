@@ -18,6 +18,17 @@
 # build:                targets to build (default: all install), or false to skip
 #
 
+2048.cpp:
+  builddep: false
+
+akira:
+  builddep: false
+  install:
+  - libgranite-dev
+  - libgtk-3-dev
+  - valac
+  blacklisted: 'needs libgranite >= 5.2.0, not in bionic'
+
 arduino-sample-project:
   blacklisted: 'need to work out how to setup cross-env'
 
@@ -55,10 +66,18 @@ budgie-desktop:
   - libasound2-dev
   build: false
 
+cage:
+  blacklisted: 'requires wlroots, not in bionic'
+
 casync:
   install:
   - libudev-dev
   - udev
+
+dav1d:
+  builddep: false
+  install:
+  - nasm
 
 dbus-broker:
   builddep: false
@@ -94,6 +113,25 @@ esp8266-arduino-sample-project:
 fedora-project:
   blacklisted: 'not a package'
 
+feedreader:
+  builddep: false
+  install:
+  - libcurl4-openssl-dev
+  - libgdk-pixbuf2.0-dev
+  - libgee-0.8-dev
+  - libgoa-1.0-dev
+  - libgstreamer-plugins-base1.0-dev
+  - libgstreamer1.0-dev
+  - libgumbo-dev
+  - libjson-glib-dev
+  - libnotify-dev
+  - libpeas-dev
+  - libsecret-1-dev
+  - libsqlite3-dev
+  - libwebkit2gtk-4.0-dev
+  - valac
+  build: false
+
 fractal:
   builddep: false
   repo-url: https://gitlab.gnome.org/World/fractal.git
@@ -122,6 +160,12 @@ fwupd:
   - valac
   # pin at a working commit before efiboot required, not packaged in bionic
   commit: cff980cfda882939b5a3a5c2baadb657d5dbb051
+
+gamemode:
+  builddep: false
+  install:
+  - libsystemd-dev
+  - systemd
 
 geary:
   install:
@@ -225,6 +269,19 @@ igt:
   - libssl-dev
   - libdw-dev
 
+ish:
+  builddep: false
+  install:
+  - clang
+  - libsqlite3-dev
+  - lld
+  # only builds with clang
+  extra-commands: apt-get purge -y gcc
+  build: false
+
+json:
+  builddep: false
+
 jsoncpp:
   builddep: false
 
@@ -234,6 +291,23 @@ kiwix-libraries:
   - libicu-dev
   - libzim-dev
   blacklisted: 'needs libzim >= 4.0.0, not in bionic'
+
+knot-resolver:
+  blacklisted: 'needs libknot >= 2.8, not in bionic'
+
+lc0:
+  builddep: false
+  install:
+  - libopenblas-dev
+  # tweak so we don't need python2 as well
+  extra-commands: sed -i s!python!python3! checkdir.py
+
+libcamera:
+  builddep: false
+  # http URL only supports dumb http transport which doesn't support shallow clone
+  repo-url: git://linuxtv.org/libcamera.git
+  install:
+  - libudev-dev
 
 libdrm:
 
@@ -296,6 +370,19 @@ lightdm-webkit2-greeter:
   - libwebkit2gtk-4.0-dev
   repo-url: https://github.com/Antergos/lightdm-webkit2-greeter
 
+marker:
+  builddep: false
+  install:
+  - libglib2.0-dev
+  - libgtk-3-dev
+  - libgtksourceview-3.0-dev
+  - libgtkspell3-3-dev
+  - libwebkit2gtk-4.0-dev
+  # uses submodules, but not as subprojects
+  extra-commands: git submodule update --init --recursive
+  # install generates so much output travis terminates job as log is too long
+  build: all
+
 mesa:
   install:
   - libegl1-mesa-dev
@@ -324,7 +411,29 @@ nemo:
   # pin at commit before xapp >= 1.4.0 required, not in bionic
   commit: 80672f071742453ec0e84e4a46ec1ab28fe62379
 
+oomd:
+  builddep: false
+  install:
+  - libjsoncpp-dev
+
+openh264:
+  builddep: false
+  install:
+  - nasm
+
+openhmd:
+  builddep: false
+  install:
+  - libhidapi-dev
+
 orc:
+
+ots:
+  install:
+  - libfreetype6-dev
+  # workaround for meson issue #5070
+  # uses submodules, but not as subprojects
+  extra-commands: sed -i s#appleframeworks## meson.build ; git submodule update --init
 
 outlier:
   builddep: false
@@ -337,6 +446,13 @@ pango:
 parzip:
   builddep: false
   extra-commands: meson wrap update zlib
+
+peek:
+  builddep: false
+  install:
+  - gettext
+  - libgtk-3-dev
+  - valac
 
 pipewire:
   builddep: false
@@ -354,6 +470,13 @@ pithos:
 pitivi:
   blacklisted: 'has unpackaged subproject gst-transcoder, which depends on gstreamer-1.0 > 1.15.0, not in bionic'
 
+playerctl:
+  builddep: false
+  install:
+  - gtk-doc-tools
+  - libgirepository1.0-dev
+  - libglib2.0-dev
+
 polari:
   # pin at commit before gjs-1.0 1.53.90 required, not in bionic
   commit: c97477b23361855e22619546a297d7513163bb76
@@ -365,6 +488,12 @@ radare2:
 sshfs:
   # pin at commit before libfuse3 required, not in bionic
   commit: 6cc86fc0bdaaeacfb1bd5e4336f2a2d1e5b189b8
+
+sway:
+  builddep: false
+  install:
+  - libjson-c-dev
+  blacklisted: 'needs libjson-c-dev >= 0.13, not in bionic'
 
 sysprof:
   install:
@@ -386,6 +515,14 @@ taisei-project:
   - libwebp-dev
   - python-docutils
   repo-url: https://github.com/taisei-project/taisei.git
+
+terminology:
+  blacklisted: 'needs edje >=1.20.0, not in bionic'
+
+tilix:
+  install:
+  - dub
+  blacklisted: 'needs some D voodoo to let gtk D bindings dependency be found'
 
 valum:
   builddep: false
@@ -427,6 +564,12 @@ wlroots:
   # pin at commit before wayland-protocols >= 1.14 required, not in bionic
   commit: f1fcc685b62d5c37c3b99ce6bfeb11ac1fa59ea6
 
+wxformbuilder:
+  builddep: false
+  install:
+  - libwxgtk3.0-dev
+  - libwxgtk-media3.0-dev
+
 xi-gtk:
   builddep: false
   install:
@@ -436,6 +579,9 @@ xi-gtk:
 
 xorg:
   builddep: xorg-server
+
+zathura:
+  blacklisted: 'needs girara-gtk3 >= 0.3.2, not in bionic'
 
 zstandard:
   builddep: zstd
