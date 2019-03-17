@@ -41,6 +41,8 @@ bolt:
   - libpolkit-gobject-1-dev
   - systemd
   - libsystemd-dev
+  # pin at a working commit to avoid unstream borkage
+  commit: 95388c0845340564c8c517b86134eede3bd880ba
 
 budgie-desktop:
   builddep: false
@@ -169,10 +171,11 @@ gamemode:
 
 geary:
   install:
-  - libunwind-dev
-  - libgoa-1.0-dev
   - itstool
+  - libfolks-dev
+  - libgoa-1.0-dev
   - libjson-glib-dev
+  - libunwind-dev
   repo-url: https://git.gnome.org/browse/geary
 
 glib:
@@ -192,6 +195,10 @@ gnome-builder:
   # spellcheck uses enchant2, not in bionic
   config: -Dwith_spellcheck=false
   build: false
+
+gnome-mpv:
+  # pin before mpv >= 1.101 required, not in bionic
+  commit: 47de9c9588651486fac8499ef849ee7375ebe2e6
 
 gnome-recipes:
   install:
@@ -343,6 +350,7 @@ libmodulemd:
   - libgirepository1.0-dev
   - libglib2.0-dev
   - libyaml-dev
+  - pycodestyle
   - python-autopep8
   - valgrind
   # workaround assumption in #! line that /usr/bin/sh exists
@@ -403,7 +411,10 @@ nautilus:
   install:
   - libgexiv2-dev
   - libseccomp-dev
+  - libgstreamer-plugins-base1.0-dev
   repo-url: https://gitlab.gnome.org/GNOME/nautilus.git
+  # pin at commit before glib >= 2.58.1 required, not in bionic
+  commit: de17081f
 
 nemo:
   install:
@@ -482,8 +493,6 @@ polari:
   commit: c97477b23361855e22619546a297d7513163bb76
 
 radare2:
-  # yes, I threw up in my mouth, a bit...
-  extra-commands: (cd shlr; ./capstone.sh https://github.com/aquynh/capstone.git next)
 
 sshfs:
   # pin at commit before libfuse3 required, not in bionic
@@ -511,10 +520,13 @@ taisei-project:
   - libfreetype6-dev
   - libsdl2-dev
   - libsdl2-image-dev
+  - libsdl2-mixer-dev
   - libpng-dev
   - libwebp-dev
   - python-docutils
   repo-url: https://github.com/taisei-project/taisei.git
+  # uses submodules, but not as subprojects
+  extra-commands: git submodule update --init
 
 terminology:
   blacklisted: 'needs edje >=1.20.0, not in bionic'
