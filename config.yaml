@@ -426,6 +426,8 @@ oomd:
   builddep: false
   install:
   - libjsoncpp-dev
+  # pin at commit before gcc-8 required
+  commit: 05049df5a931411c996c53b048b3e054315481e1
 
 openh264:
   builddep: false
@@ -509,6 +511,10 @@ sysprof:
   - systemd
   - policykit-1
 
+systemd:
+  # workaround for meson#5113 systemd#12232
+  extra-commands: sed -i s!.-Wl,--undefined.!! meson.build
+
 szl:
   builddep: false
   # uses submodules, but not as subprojects
@@ -542,6 +548,8 @@ valum:
   - valac
   - libsoup2.4-dev
   - libssl-dev
+  # pin vsgi to workaround vsgi#3
+  extra-commands: sed -i s!master!4c0318d3a2a7f47158ae220cae07c72af469d2e1! subprojects/vsgi.wrap
 
 wayland-and-weston:
   builddep: false
