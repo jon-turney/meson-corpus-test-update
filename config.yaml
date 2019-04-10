@@ -177,6 +177,8 @@ geary:
   - libjson-glib-dev
   - libunwind-dev
   repo-url: https://git.gnome.org/browse/geary
+  # pin at commit before libhandy required, not packaged in bionic
+  commit: a83a68ef3973b3630d1a8dd13b6b7a951378e593
 
 glib:
   builddep: glib2.0
