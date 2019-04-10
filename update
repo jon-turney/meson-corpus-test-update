@@ -38,7 +38,7 @@ with open(os.path.join(scriptdir, "template.yaml")) as f:
 
 matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo]
                    + (['MESON_COMMIT=%s' % args.commit] if args.commit else [])
-                   + (['BRANCH=%s' % p.branch] if p.branch else [])
+                   + (['BRANCH="%s"' % p.branch] if p.branch else [])
                    + (['COMMIT=%s' % p.commit] if p.commit else [])
                    + (['BUILDDEP=%s' % p.builddep] if p.builddep else [])
                    + (['ALSOINSTALL="%s"' % ' '.join(p.alsoinstall)] if p.alsoinstall else [])

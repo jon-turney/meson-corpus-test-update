@@ -34,10 +34,10 @@ for p in projects:
     if args.project and p.name not in args.project:
         continue
 
-    if not p.branch:
-        branch = 'master'
+    if p.branch:
+        branch = '--branch ' + p.branch
     else:
-        branch = p.branch
+        branch = ''
 
     if not p.sourcedir:
         sourcedir = ''
@@ -79,7 +79,7 @@ for p in projects:
     if p.commit:
         cmds.append('git clone {p.repo} {p.name} && git -C {p.name} checkout {p.commit}'.format(p=p))
     else:
-        cmds.append('git clone --depth=1 --branch {branch} {p.repo} {p.name}'.format(branch=branch, p=p))
+        cmds.append('git clone --depth=1 {branch} {p.repo} {p.name}'.format(branch=branch, p=p))
 
     cmds.append('cd {p.name}'.format(p=p))
     if p.hacks:

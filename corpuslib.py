@@ -75,10 +75,10 @@ def fetch_project_list(skip_blacklisted=True):
                     reference = None
                 else:
                     # looks like a branch or tag reference
-                    reference = commit
+                    reference = '--branch ' + commit
                     commit = None
             else:
-                # otherwise omitted, and script will default to master
+                # otherwise omitted, and script will default to HEAD
                 reference = None
                 commit = None
 
