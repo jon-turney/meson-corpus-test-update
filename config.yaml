@@ -277,6 +277,8 @@ igt:
   install:
   - libssl-dev
   - libdw-dev
+  # pin at a commit which builds, since master is broken
+  commit: 0dc1d6e4d4305a62c64242ec65709e44f5036cf4
 
 ish:
   builddep: false
