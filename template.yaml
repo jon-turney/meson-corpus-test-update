@@ -19,7 +19,7 @@ before_script:
   - if test -n "${MESON_COMMIT}" ; then echo "retry -- git clone https://github.com/mesonbuild/meson.git && retry -- git -C meson fetch origin ${MESON_COMMIT} && git -C meson checkout FETCH_HEAD && pip3 install ./meson &&" >>script ; fi
   - if test -n "${COMMIT}" ; then echo "retry -- git clone ${REPO} ${NAME} && git -C ${NAME} checkout ${COMMIT} &&" >>script ; fi
   - if test -z "${COMMIT}" ; then echo "retry -- git clone --depth=1 ${BRANCH} ${REPO} ${NAME} &&" >>script ; fi
-  - echo "cd ${NAME} && " >>script
+  - echo "cd ${NAME} && git rev-parse HEAD &&" >>script
   - if test -n "${HACKS}" ; then echo "${HACKS} &&" >>script ; fi
   - echo "meson _build ${SOURCEDIR} ${CONFIG} &&" >>script
   - if test -n "${BUILD}" ; then echo "DESTDIR=/install ninja -C _build ${BUILD}" >>script ; fi
