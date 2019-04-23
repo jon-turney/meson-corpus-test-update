@@ -67,6 +67,8 @@ budgie-desktop:
   - gnome-settings-daemon-dev
   - libasound2-dev
   build: false
+  # pin at commit before libmutter >= 3 required, not in bionic
+  commit: e1017252a61b47d26cbb391488edc1d3a366f5a0
 
 cage:
   blacklisted: 'requires wlroots, not in bionic'
