@@ -499,6 +499,8 @@ polari:
   commit: c97477b23361855e22619546a297d7513163bb76
 
 radare2:
+  # pin at a commit which builds, since master is broken
+  commit: 336c0e84fc53407b9a2ff2dcd97d7d59392fb0f0
 
 sshfs:
   # pin at commit before libfuse3 required, not in bionic
