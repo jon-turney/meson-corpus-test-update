@@ -226,6 +226,11 @@ gnome-usage:
   # pin before libdazzle required, not in bionic
   commit: 4272da4d89f3baccf821805fce72e2098579e9db
 
+gnu-fribidi:
+  builddep: fribidi
+  # requires c2man
+  config: -Ddocs=false
+
 graphene:
   repo-url: git://github.com/ebassi/graphene
 
@@ -291,6 +296,9 @@ ish:
   # only builds with clang
   extra-commands: apt-get purge -y gcc
   build: false
+
+janet:
+  builddep: false
 
 json:
   builddep: false
@@ -370,6 +378,11 @@ libspng:
   install:
   - zlib1g-dev
   - libpng-dev
+
+libui:
+  builddep: false
+  install:
+  - libgtk-3-dev
 
 libzim:
   builddep: zimlib
