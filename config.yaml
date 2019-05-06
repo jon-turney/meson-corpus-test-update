@@ -383,6 +383,8 @@ libui:
   builddep: false
   install:
   - libgtk-3-dev
+  # workaround fallout from meson#5348
+  extra-commands: sed -i s!cpp_eh=sc!cpp_eh=default! meson.build
 
 libzim:
   builddep: zimlib
