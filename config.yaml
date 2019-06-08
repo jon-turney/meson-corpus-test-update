@@ -168,6 +168,7 @@ fwupd:
 gamemode:
   builddep: false
   install:
+  - libdbus-1-dev
   - libsystemd-dev
   - systemd
 
@@ -475,6 +476,7 @@ outlier:
 pango:
   install:
   - libfribidi-dev
+  - libmount-dev
   builddep: pango1.0
 
 parzip:
@@ -533,6 +535,9 @@ sysprof:
   install:
   - systemd
   - policykit-1
+  # pin before libdazzle >= 3.30.0 required, not in bionic
+  # pin at commit which build on 32-bit
+  commit: 46d3c553e5e9314aaab3cd49673d8344324d2f0a
 
 systemd:
   # workaround for meson#5113 systemd#12232
