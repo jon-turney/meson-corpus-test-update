@@ -29,6 +29,20 @@ akira:
   - valac
   blacklisted: 'needs libgranite >= 5.2.0, not in bionic'
 
+aravis:
+  builddep: false
+  install:
+  - gobject-introspection
+  - gtk-doc-tools
+  - libgirepository1.0-dev
+  - libglib2.0-dev
+  - libgstreamer-plugins-base1.0-dev
+  - libgstreamer1.0-dev
+  - libgtk-3-dev
+  - libnotify-dev
+  - libusb-1.0-0-dev
+  - libxml2-dev
+
 arduino-sample-project:
   blacklisted: 'need to work out how to setup cross-env'
 
@@ -106,6 +120,7 @@ elementary-os:
 emeus:
   builddep: false
   install:
+  - gtk-doc-tools
   - libglib2.0-dev
   - libgtk-3-dev
   - libgirepository1.0-dev
@@ -275,6 +290,9 @@ hardcode-tray:
   - libgirepository1.0-dev
   - libgtk-3-dev
 
+helenos:
+  blacklisted: 'no idea how to build this!'
+
 hexchat:
   install:
   - libluajit-5.1-dev
@@ -344,6 +362,8 @@ libfuse:
 libgit2-glib:
   install:
   - python-gi-dev
+  # workaround https://gitlab.gnome.org/GNOME/libgit2-glib/issues/5
+  extra-commands: mkdir -p /usr/local/share/vala/vapi
 
 libhttpseverywhere:
   builddep: false
@@ -364,12 +384,17 @@ libmodulemd:
   - gtk-doc-tools
   - libgirepository1.0-dev
   - libglib2.0-dev
+  - libglib2.0-doc
+  - libmagic-dev
+  - librpm-dev
   - libyaml-dev
+  - libzstd-dev
   - pycodestyle
   - python-autopep8
   - valgrind
   # workaround assumption in #! line that /usr/bin/sh exists
-  extra-commands: sed -i s!usr/bin/sh!bin/sh! spec_tmpl.sh
+  # workaround some zaniness
+  extra-commands: sed -i s!usr/bin/sh!bin/sh! spec_tmpl.sh ; touch /usr/share/gtk-doc/html/glib/index.html ; touch /usr/share/gtk-doc/html/gobject/index.html
 
 libosmscout:
   builddep: false
@@ -417,6 +442,8 @@ mesa:
   install:
   - libegl1-mesa-dev
   - libxvmc-dev
+  - python
+  - python-mako
   # pin at commit before wayland needs to provide wayland-egl-backend (>= 1.15?), not in bionic
   commit: cb03803253b026d5f4c1e0fef431a12df461e6d8
   build: false
@@ -424,6 +451,7 @@ mesa:
 miraclecast:
   builddep: false
   install:
+  - libreadline-dev
   - libudev-dev
   - libglib2.0-dev
   - libsystemd-dev
@@ -478,6 +506,8 @@ pango:
   - libfribidi-dev
   - libmount-dev
   builddep: pango1.0
+  # pin at commit before harfbuzz >= 2.0.0 required, not in bionic
+  commit: 546f4c242d6f4fe312de3b7c918a848e5172e18d
 
 parzip:
   builddep: false
@@ -520,6 +550,10 @@ polari:
 radare2:
   # pin at a commit which builds, since master is broken
   commit: 336c0e84fc53407b9a2ff2dcd97d7d59392fb0f0
+
+rxdock:
+  builddep: false
+  build: false
 
 sshfs:
   # pin at commit before libfuse3 required, not in bionic
