@@ -348,6 +348,7 @@ libcamera:
   repo-url: git://linuxtv.org/libcamera.git
   install:
   - libudev-dev
+  - python3-yaml
 
 libdrm:
 
@@ -394,7 +395,8 @@ libmodulemd:
   - valgrind
   # workaround assumption in #! line that /usr/bin/sh exists
   # workaround some zaniness
-  extra-commands: sed -i s!usr/bin/sh!bin/sh! spec_tmpl.sh ; touch /usr/share/gtk-doc/html/glib/index.html ; touch /usr/share/gtk-doc/html/gobject/index.html
+  # install black python formatted, not packaged in bionic
+  extra-commands: sed -i s!usr/bin/sh!bin/sh! spec_tmpl.sh ; touch /usr/share/gtk-doc/html/glib/index.html ; touch /usr/share/gtk-doc/html/gobject/index.html ; pip3 install black
 
 libosmscout:
   builddep: false
@@ -457,6 +459,9 @@ miraclecast:
   - libsystemd-dev
   build: false
 
+mrsh:
+  builddep: false
+
 nautilus:
   install:
   - libgexiv2-dev
@@ -501,6 +506,12 @@ ots:
 outlier:
   builddep: false
 
+pacman:
+  repo-url: git://git.archlinux.org/pacman.git
+  install:
+  - libarchive-dev
+  - libssl-dev
+
 pango:
   install:
   - libfribidi-dev
@@ -520,13 +531,22 @@ peek:
   - libgtk-3-dev
   - valac
 
+picolibc:
+  builddep: false
+
 pipewire:
   builddep: false
   install:
-  - libdbus-1-dev
   - libasound2-dev
-  - libv4l-dev
+  - libbluetooth-dev
+  - libdbus-1-dev
+  - libglib2.0-dev
+  - libgstreamer1.0-dev
+  - libgstreamer-plugins-base1.0-dev
+  - libjack-dev
+  - libsbc-dev
   - libudev-dev
+  - libv4l-dev
   repo-url: https://github.com/PipeWire/pipewire.git
 
 pithos:
