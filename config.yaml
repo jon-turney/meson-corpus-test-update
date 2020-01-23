@@ -96,6 +96,8 @@ dav1d:
   builddep: false
   install:
   - nasm
+  # pin at commit before nasm >= 2.14 required, not in bionic
+  commit: e636a2f4d1748d8b6aeb391a3ceda94a05497cd5
 
 dbus-broker:
   builddep: false
