@@ -388,6 +388,7 @@ libmodulemd:
   - clang-format
   - gobject-introspection
   - gtk-doc-tools
+  - help2man
   - libgirepository1.0-dev
   - libglib2.0-dev
   - libglib2.0-doc
@@ -400,7 +401,7 @@ libmodulemd:
   - valgrind
   # workaround assumption in #! line that /usr/bin/sh exists
   # workaround some zaniness
-  # install black python formatted, not packaged in bionic
+  # install black python formatter, not packaged in bionic
   extra-commands: sed -i s!usr/bin/sh!bin/sh! spec_tmpl.sh ; touch /usr/share/gtk-doc/html/glib/index.html ; touch /usr/share/gtk-doc/html/gobject/index.html ; pip3 install black
 
 libosmscout:
