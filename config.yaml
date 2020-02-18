@@ -176,6 +176,8 @@ frida:
 fwupd:
   install:
   - gnu-efi
+  - libappstream-glib-dev
+  - libfwup-dev
   - libjson-glib-dev
   - help2man
   - valac
