@@ -255,6 +255,8 @@ graphene:
   repo-url: git://github.com/ebassi/graphene
 
 grilo:
+  # pin at commit before gio-2.0 >= 2.58 required, not in bionic
+  commit: d0c7a8311beb01c4e674916b9e7b99774879e15d
 
 grilo-plugins:
   # pin at commit before grilo >= 0.3.6 required, not in bionic
