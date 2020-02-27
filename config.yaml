@@ -348,8 +348,6 @@ lc0:
   builddep: false
   install:
   - libopenblas-dev
-  # tweak so we don't need python2 as well
-  extra-commands: sed -i s!python!python3! checkdir.py
 
 libcamera:
   builddep: false
