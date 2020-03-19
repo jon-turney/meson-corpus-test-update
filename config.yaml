@@ -356,6 +356,8 @@ libcamera:
   install:
   - libudev-dev
   - python3-yaml
+  # pin at commit before static assertion failed in 32-bit builds
+  commit: cd0f7929ec0bdf3c98e552a6ce2e9147b8c6dd17
 
 libdrm:
 
@@ -565,6 +567,8 @@ pipewire:
   repo-url: https://github.com/PipeWire/pipewire.git
   # jack in bionic is too old
   config: -Dpipewire-jack=false -Djack=false
+  # pin at commit before build breakage
+  commit: 6eca935e61bd5dc740e2c60f184a247276f592ae
 
 pithos:
   install:
