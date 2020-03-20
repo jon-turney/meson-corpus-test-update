@@ -24,97 +24,56 @@
 akira:
   builddep: false
   install:
+  - appstream-util
+  - desktop-file-utils
+  - gettext
+  - libarchive-dev
+  - libgoocanvas-2.0-dev
   - libgranite-dev
   - libgtk-3-dev
-  - valac
-  blacklisted: 'needs libgranite >= 5.2.0, not in bionic'
-
-aravis:
-  builddep: false
-  install:
-  - gobject-introspection
-  - gtk-doc-tools
-  - libgirepository1.0-dev
-  - libglib2.0-dev
-  - libgstreamer-plugins-base1.0-dev
-  - libgstreamer1.0-dev
-  - libgtk-3-dev
-  - libnotify-dev
-  - libusb-1.0-0-dev
+  - libjson-glib-dev
   - libxml2-dev
+  - valac
 
 arduino-sample-project:
   blacklisted: 'need to work out how to setup cross-env'
 
-bolt:
+cage:
+  builddep: false
+  install:
+  - libwlroots-dev
+
+cozy:
   builddep: false
   install:
   - libglib2.0-dev
-  - libudev-dev
-  - udev
-  - libpolkit-gobject-1-dev
-  - systemd
-  - libsystemd-dev
-  # pin at a working commit to avoid unstream borkage
-  commit: 95388c0845340564c8c517b86134eede3bd880ba
-
-budgie-desktop:
-  builddep: false
-  install:
-  - valac
-  - libgtk-3-dev
-  - libwnck-3-dev
-  - libpeas-dev
-  - uuid-dev
-  - libibus-1.0-dev
-  - libgnome-desktop-3-dev
-  - libaccountsservice-dev
-  - intltool
-  - libpulse-dev
-  - sassc
-  - libpolkit-agent-1-dev
-  - libmutter-2-dev
-  - libgnome-menu-3-dev
-  - libupower-glib-dev
-  - libgnome-bluetooth-dev
-  - gtk-doc-tools
-  - gnome-settings-daemon-dev
-  - libasound2-dev
-  build: false
-  # pin at commit before libmutter >= 3 required, not in bionic
-  commit: e1017252a61b47d26cbb391488edc1d3a366f5a0
-
-cage:
-  blacklisted: 'requires wlroots, not in bionic'
-
-casync:
-  install:
-  - libudev-dev
-  - udev
+  - python3-distro
+  - python3-peewee
+  - python3-mutagen
 
 dav1d:
   builddep: false
   install:
   - nasm
-  # pin at commit before nasm >= 2.14 required, not in bionic
-  commit: e636a2f4d1748d8b6aeb391a3ceda94a05497cd5
 
 dbus-broker:
   builddep: false
   install:
-  - python-docutils
   - libdbus-1-dev
   - libglib2.0-dev
   - libsystemd-dev
+  - python-docutils
   - systemd
 
 dpdk:
-  builddep: false
   repo-url: git://dpdk.org/dpdk
-  build: false
 
 dxvk:
-  blacklisted: 'need to work out how to install vulcan devkit'
+  install:
+  - gcc-mingw-w64-x86-64
+  - g++-mingw-w64-x86-64
+  config: --cross-file build-win64.txt
+  extra-commands: update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix ; update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
 
 elementary-os:
   blacklisted: 'is a distribution'
@@ -123,10 +82,9 @@ emeus:
   builddep: false
   install:
   - gtk-doc-tools
+  - libgirepository1.0-dev
   - libglib2.0-dev
   - libgtk-3-dev
-  - libgirepository1.0-dev
-  build: false
 
 esp8266-arduino-sample-project:
   blacklisted: 'need to work out how to setup cross-env'
@@ -134,117 +92,74 @@ esp8266-arduino-sample-project:
 fedora-project:
   blacklisted: 'not a package'
 
-feedreader:
+flecs:
+  builddep: false
+
+foliate:
   builddep: false
   install:
-  - libcurl4-openssl-dev
-  - libgdk-pixbuf2.0-dev
-  - libgee-0.8-dev
-  - libgoa-1.0-dev
-  - libgstreamer-plugins-base1.0-dev
-  - libgstreamer1.0-dev
-  - libgumbo-dev
-  - libjson-glib-dev
-  - libnotify-dev
-  - libpeas-dev
-  - libsecret-1-dev
-  - libsqlite3-dev
-  - libwebkit2gtk-4.0-dev
-  - valac
-  build: false
+  - gettext
+  - gjs
+  - libglib2.0-dev-bin
 
 fractal:
-  builddep: false
   repo-url: https://gitlab.gnome.org/World/fractal.git
+  builddep: false
   install:
   - cargo
   - gettext
   - libatk1.0-dev
-  - libcariro2-dev
+  - libcairo2-dev
   - libdbus-1-dev
   - libgdk-pixbuf2.0-dev
+  - libges-1.0-dev
   - libgspell-1-dev
+  - libgstreamer-plugins-bad1.0-dev
+  - libgstreamer-plugins-base1.0-dev
+  - libgstreamer1.0-dev
   - libgtk-3-dev
+  - libgtksourceview-4-dev
+  - libhandy-0.0-dev
   - libpango1.0-dev
   - libssl-dev
   - rustc
-  blacklisted: 'requires gspell >= 1.8; just wraps cargo-build'
 
 frida:
   blacklisted: 'repo-url is for frida-core, make a meson.build of frida using subprojects'
 
-fwupd:
-  install:
-  - gnu-efi
-  - libappstream-glib-dev
-  - libfwup-dev
-  - libjson-glib-dev
-  - help2man
-  - valac
-  # pin at a working commit before efiboot required, not packaged in bionic
-  commit: cff980cfda882939b5a3a5c2baadb657d5dbb051
-
-gamemode:
-  builddep: false
-  install:
-  - libdbus-1-dev
-  - libsystemd-dev
-  - systemd
-
 geary:
-  install:
-  - itstool
-  - libfolks-dev
-  - libgoa-1.0-dev
-  - libjson-glib-dev
-  - libunwind-dev
   repo-url: https://git.gnome.org/browse/geary
-  # pin at commit before libhandy required, not packaged in bionic
-  commit: a83a68ef3973b3630d1a8dd13b6b7a951378e593
+  install:
+  - libgsound-dev
 
 glib:
   builddep: glib2.0
-  build: false
+
+glorytun:
+  builddep: false
+  install:
+  - libsodium-dev
+  # uses submodules, but not as subprojects
+  extra-commands: git submodule update --init --recursive
 
 gnome-boxes:
   install:
-  - libwebkit2gtk-4.0-dev
-  - freerdp2-dev
-  # pin at commit before libvirt-gconfig 2.0 required, not packaged in bionic
-  commit: v3.31.1
+  - libhandy-0.0-dev
 
 gnome-builder:
-  # pin before libdazzle >= 3.29 required, not in bionic
-  commit: 3.28.3
-  # spellcheck uses enchant2, not in bionic
-  config: -Dwith_spellcheck=false
-  build: false
-
-gnome-mpv:
-  # pin before mpv >= 1.101 required, not in bionic
-  commit: 47de9c9588651486fac8499ef849ee7375ebe2e6
-
-gnome-recipes:
-  install:
-  - libgoa-1.0-dev
-  - libjson-glib-dev
+  # requires libportal, not packaged
+  config: -Dplugin_update_manager=false
+  # tag before libdazzle-1.0 >= 3.37.0 required, not in focal
+  commit: 3.36.0
+  extra-commands: sed -i s!libide_lsp_sources,!libide_lsp_sources,libide_lsp_generated_headers,! src/libide/lsp/meson.build
 
 gnome-software:
-  # pin before flatpak >= 0.99.3 required, not in bionic
-  commit: 12031b42109892e50b38f4037b923335fdfb0fd0
-
-gnome-twitch:
-  build: false
+  # requires libmalcontent, not packaged
+  config: -Dmalcontent=false
 
 gnome-usage:
-  builddep: false
   install:
-  - libaccountsservice-dev
-  - libgtk-3-dev
-  - libgtop2-dev
-  - valac
-  # pin before libdazzle required, not in bionic
-  commit: 4272da4d89f3baccf821805fce72e2098579e9db
+  - libtracker-sparql-2.0-dev
 
 gnu-fribidi:
   builddep: fribidi
@@ -254,41 +169,29 @@ gnu-fribidi:
 graphene:
   repo-url: git://github.com/ebassi/graphene
 
-grilo:
-  # pin at commit before gio-2.0 >= 2.58 required, not in bionic
-  commit: d0c7a8311beb01c4e674916b9e7b99774879e15d
-
-grilo-plugins:
-  # pin at commit before grilo >= 0.3.6 required, not in bionic
-  commit: 770b11088c1b99ec979015faf95078c1e0dfe69e
-
 gstreamer:
   builddep: gstreamer1.0
-  # install fails in non-UTF8 locale due to encoding issue in gtkdochelper.py
-  build: all
 
 gtk+:
-  builddep: libgtk-3-dev
-  # pin at commit before pango >= 1.14.0 required, not in bionic
-  commit: 894a0c0f
-  build: false
+  builddep: gtk+3.0
+  install:
+  - libgstreamer-plugins-bad1.0-dev
+  - libgraphene-1.0-dev
 
 gtkdapp:
   builddep: false
   install:
-  - libgtkd-3-dev
   - gdc
   - gsettings-desktop-schemas-dev
-  - libglib2.0-dev
-  - gettext
+  - libgtk-3-dev
+  - libgtkd-3-dev
+  - librsvg2-dev
+  # need to work out how it's possible to build this
   build: false
 
 gvfs:
-  install:
-  - libbluray-dev
-  - libnfs-dev
-  # pin at commit before polkit-gobject-1 >= 0.114 required, not in bionic
-  commit: 3a7bb06be72fc62b4ec524afe67febf0f529066d
+  # tag before polkit >= 0.114 required, not in focal
+  commit: 1.37.1
 
 hardcode-tray:
   builddep: false
@@ -296,31 +199,28 @@ hardcode-tray:
   - libgirepository1.0-dev
   - libgtk-3-dev
 
-helenos:
-  blacklisted: 'no idea how to build this!'
-
 hexchat:
   install:
   - libluajit-5.1-dev
   - python3-cffi
 
+helenos:
+  blacklisted: 'no idea how to build this!'
+
 igt:
   builddep: intel-gpu-tools
-  install:
-  - libssl-dev
-  - libdw-dev
-  # pin at a commit which builds, since master is broken
-  commit: 0dc1d6e4d4305a62c64242ec65709e44f5036cf4
+
+inih:
+  builddep: false
 
 ish:
   builddep: false
+  # only builds with clang
   install:
   - clang
   - libsqlite3-dev
   - lld
-  # only builds with clang
-  extra-commands: apt-get purge -y gcc
-  build: false
+  - python-is-python3
 
 janet:
   builddep: false
@@ -334,12 +234,20 @@ jsoncpp:
 kiwix-libraries:
   builddep: false
   install:
+  - libcurl4-openssl-dev
   - libicu-dev
+  - libkainjow-mustache-dev
+  - libpugixml-dev
   - libzim-dev
-  blacklisted: 'needs libzim >= 4.0.0, not in bionic'
+  # tag before libzim >= 5.0.0 required, not in focal
+  commit: 5.0.0
+  extra-commands: ln -s /usr/include/kainjow/mustache.hpp /usr/include
 
 knot-resolver:
-  blacklisted: 'needs libknot >= 2.8, not in bionic'
+  # commit before libknot >= 2.8 required, not in focal
+  commit: 1bbe50b47cb41fd7459721fe08abea7cd2bf3888
+  # uses submodules, but not as subprojects
+  extra-commands: git submodule update --init --recursive
 
 ksh:
   commit: ksh2020
@@ -350,45 +258,32 @@ lc0:
   - libopenblas-dev
 
 libcamera:
-  builddep: false
   # http URL only supports dumb http transport which doesn't support shallow clone
   repo-url: git://linuxtv.org/libcamera.git
+  builddep: false
   install:
-  - libudev-dev
   - python3-yaml
-  # pin at commit before static assertion failed in 32-bit builds
-  commit: cd0f7929ec0bdf3c98e552a6ce2e9147b8c6dd17
-
-libdrm:
-
-libepoxy:
-  build: false
 
 libfuse:
+  builddep: fuse
   install:
   - udev
-  builddep: fuse
-
-libgit2-glib:
-  install:
-  - python-gi-dev
-  # workaround https://gitlab.gnome.org/GNOME/libgit2-glib/issues/5
-  extra-commands: mkdir -p /usr/local/share/vala/vapi
 
 libhttpseverywhere:
   builddep: false
   install:
-  - valac
+  - gobject-introspection
+  - libarchive-dev
+  - libgee-0.8-dev
+  - libgirepository1.0-dev
   - libjson-glib-dev
   - libsoup2.4-dev
-  - libgee-0.8-dev
-  - libarchive-dev
-  - gobject-introspection
-  build: false
+  - valac
 
 libmodulemd:
   builddep: false
   install:
+  - black
   - clang-format
   - gobject-introspection
   - gtk-doc-tools
@@ -401,98 +296,54 @@ libmodulemd:
   - libyaml-dev
   - libzstd-dev
   - pycodestyle
-  - python-autopep8
+  - python3-autopep8
   - valgrind
-  # workaround assumption in #! line that /usr/bin/sh exists
-  # workaround some zaniness
-  # install black python formatter, not packaged in bionic
-  extra-commands: sed -i s!usr/bin/sh!bin/sh! spec_tmpl.sh ; touch /usr/share/gtk-doc/html/glib/index.html ; touch /usr/share/gtk-doc/html/gobject/index.html ; pip3 install black
 
 libosmscout:
   builddep: false
 
+libratbag:
+  install:
+  - valgrind
+  blacklisted: 'https://github.com/mesonbuild/meson/issues/6845'
+
 libspng:
   builddep: false
-  install:
-  - zlib1g-dev
-  - libpng-dev
 
 libui:
   builddep: false
   install:
   - libgtk-3-dev
-  # workaround fallout from meson#5348
-  extra-commands: sed -i s!cpp_eh=sc!cpp_eh=default! meson.build
 
 libzim:
   builddep: zimlib
 
-lightdm-webkit2-greeter:
-  builddep: false
-  commit: stable
-  install:
-  - libdbus-glib-1-dev
-  - liblightdm-gobject-1-dev
-  - libgtk-3-dev
-  - libwebkit2gtk-4.0-dev
-  repo-url: https://github.com/Antergos/lightdm-webkit2-greeter
-
 marker:
   builddep: false
   install:
-  - libglib2.0-dev
+  - libglib2.0-dev-bin
   - libgtk-3-dev
   - libgtksourceview-3.0-dev
-  - libgtkspell3-3-dev
   - libwebkit2gtk-4.0-dev
+  - libgtkspell3-3-dev
   # uses submodules, but not as subprojects
   extra-commands: git submodule update --init --recursive
-  # install generates so much output travis terminates job as log is too long
-  build: all
-
-mesa:
-  install:
-  - libegl1-mesa-dev
-  - libxvmc-dev
-  - python
-  - python-mako
-  # pin at commit before wayland needs to provide wayland-egl-backend (>= 1.15?), not in bionic
-  commit: cb03803253b026d5f4c1e0fef431a12df461e6d8
+  # build produces so much output the job exceeds the maximum log length
   build: false
 
 miraclecast:
   builddep: false
   install:
-  - libreadline-dev
-  - libudev-dev
   - libglib2.0-dev
+  - libreadline-dev
   - libsystemd-dev
-  build: false
+  - libudev-dev
 
 mrsh:
   builddep: false
 
-nautilus:
-  install:
-  - libgexiv2-dev
-  - libseccomp-dev
-  - libgstreamer-plugins-base1.0-dev
-  repo-url: https://gitlab.gnome.org/GNOME/nautilus.git
-  # pin at commit before glib >= 2.58.1 required, not in bionic
-  commit: de17081f
-
-nemo:
-  install:
-  - libxapp-dev
-  # pin at commit before xapp >= 1.4.0 required, not in bionic
-  commit: 80672f071742453ec0e84e4a46ec1ab28fe62379
-
-oomd:
+ocherbook:
   builddep: false
-  install:
-  - libjsoncpp-dev
-  # pin at commit before gcc-8 required
-  commit: 05049df5a931411c996c53b048b3e054315481e1
 
 openh264:
   builddep: false
@@ -504,14 +355,13 @@ openhmd:
   install:
   - libhidapi-dev
 
-orc:
+opentitan:
+  builddep: false
+  blacklisted: 'need to work out how to install /tools/riscv/ toolchain'
 
 ots:
-  install:
-  - libfreetype6-dev
-  # workaround for meson issue #5070
   # uses submodules, but not as subprojects
-  extra-commands: sed -i s#appleframeworks## meson.build ; git submodule update --init
+  extra-commands: git submodule update --init --recursive
 
 outlier:
   builddep: false
@@ -523,185 +373,147 @@ pacman:
   - libssl-dev
 
 pango:
-  install:
-  - libfribidi-dev
-  - libmount-dev
   builddep: pango1.0
-  # pin at commit before harfbuzz >= 2.0.0 required, not in bionic
-  commit: 546f4c242d6f4fe312de3b7c918a848e5172e18d
 
 parzip:
   builddep: false
-  install:
-  - zlib1g-dev
-  # later versions require C++ std::filesystem, which requires g++ >= 8, not in bionic
-  commit: 1.3.0
-
-peek:
-  builddep: false
-  install:
-  - gettext
-  - libgtk-3-dev
-  - valac
 
 picolibc:
   builddep: false
+  # hack to invoke the script which configures this
   extra-commands: mkdir _build ; cd _build ; ../do-native-configure ; cd ..
   config: -v
 
 pipewire:
-  builddep: false
   install:
-  - libasound2-dev
   - libbluetooth-dev
-  - libdbus-1-dev
-  - libglib2.0-dev
-  - libgstreamer1.0-dev
-  - libgstreamer-plugins-base1.0-dev
-  - libjack-dev
-  - libpulse-dev
-  - libsbc-dev
-  - libudev-dev
-  - libv4l-dev
+  - libjack-jackd2-dev
   - libvulkan-dev
-  repo-url: https://github.com/PipeWire/pipewire.git
-  # jack in bionic is too old
-  config: -Dpipewire-jack=false -Djack=false
-  # pin at commit before build breakage
-  commit: 6eca935e61bd5dc740e2c60f184a247276f592ae
 
 pithos:
   install:
   - libglib2.0-dev
 
-pitivi:
-  blacklisted: 'has unpackaged subproject gst-transcoder, which depends on gstreamer-1.0 > 1.15.0, not in bionic'
-
-playerctl:
+qboot:
   builddep: false
-  install:
-  - gtk-doc-tools
-  - libgirepository1.0-dev
-  - libglib2.0-dev
-
-polari:
-  # pin at commit before gjs-1.0 1.53.90 required, not in bionic
-  commit: c97477b23361855e22619546a297d7513163bb76
-
-radare2:
-  # pin at a commit which builds, since master is broken
-  commit: 336c0e84fc53407b9a2ff2dcd97d7d59392fb0f0
 
 rxdock:
   builddep: false
-  build: false
 
-sshfs:
-  # pin at commit before libfuse3 required, not in bionic
-  commit: 6cc86fc0bdaaeacfb1bd5e4336f2a2d1e5b189b8
+scrcpy:
+  # fake scrcpy-server
+  extra-commands: touch server/scrcpy-server
+  config: -Dprebuilt_server=server/scrcpy-server
 
-sway:
+sequeler:
   builddep: false
   install:
-  - libjson-c-dev
-  blacklisted: 'needs libjson-c-dev >= 0.13, not in bionic'
+  - gettext
+  - libgda-5.0-dev
+  - libgranite-dev
+  - libgtk-3-dev
+  - libgtksourceview-3.0-dev
+  - libsecret-1-dev
+  - libssh2-1-dev
+  - libxml2-dev
+  - valac
 
-sysprof:
+sshfs:
   install:
-  - systemd
-  - policykit-1
-  # pin before libdazzle >= 3.30.0 required, not in bionic
-  # pin at commit which build on 32-bit
-  commit: 46d3c553e5e9314aaab3cd49673d8344324d2f0a
+  - libfuse3-dev
 
-systemd:
-  # workaround for meson#5113 systemd#12232
-  extra-commands: sed -i s!.-Wl,--undefined.!! meson.build
+sway:
+  # needs aligned wlroots to build, but subproject isn't in repository
+  build: false
 
 szl:
   builddep: false
   # uses submodules, but not as subprojects
-  extra-commands: git submodule update --init
-
-qboot:
-  builddep: false
+  extra-commands: git submodule update --init --recursive
 
 taisei-project:
+  repo-url: https://github.com/taisei-project/taisei.git
   builddep: false
   install:
-  - libfreetype6-dev
-  - libsdl2-dev
-  - libsdl2-image-dev
-  - libsdl2-mixer-dev
-  - libpng-dev
-  - libwebp-dev
+  - libgl-dev
+  - libglx-dev
+  - libx11-dev
+  - libxext-dev
   - python-docutils
-  repo-url: https://github.com/taisei-project/taisei.git
   # uses submodules, but not as subprojects
-  extra-commands: git submodule update --init
+  extra-commands: git submodule update --init --recursive
 
-terminology:
-  blacklisted: 'needs edje >=1.20.0, not in bionic'
-
-tilix:
+tizonia:
+  builddep: false
   install:
-  - dub
-  blacklisted: 'needs some D voodoo to let gtk D bindings dependency be found'
+  - libboost-chrono-dev
+  - libboost-filesystem-dev
+  - libboost-program-options-dev
+  - libboost-python-dev
+  - libboost-thread-dev
+  - liblog4c-dev
+  - uuid-dev
+  blacklisted: 'https://github.com/mesonbuild/meson/issues/6844'
 
 valum:
   builddep: false
   install:
-  - valac
   - libsoup2.4-dev
   - libssl-dev
-  # pin vsgi to workaround vsgi#3
-  extra-commands: sed -i s!master!4c0318d3a2a7f47158ae220cae07c72af469d2e1! subprojects/vsgi.wrap
+  - valac
 
-weston:
-  blacklisted: 'needs wayland-protocols >= 1.13, not in bionic'
-
-wlroots:
+venom:
   builddep: false
   install:
-  - libegl1-mesa-dev
-  - libgbm-dev
-  - libgles2-mesa-dev
-  - libinput-dev
-  - libpixman-1-dev
-  - libwayland-dev
-  - libxcb-composite0-dev
-  - libxcb-image0-dev
-  - libxkbcommon-dev
-  - wayland-protocols
-  # pin at commit before wayland-protocols >= 1.14 required, not in bionic
-  commit: f1fcc685b62d5c37c3b99ce6bfeb11ac1fa59ea6
+  - libcanberra-dev
+  - libgee-0.8-dev
+  - libgspell-1-dev
+  - libgstreamer-plugins-base1.0-dev
+  - libgstreamer1.0-dev
+  - libgtk-3-dev
+  - libjson-glib-dev
+  - libsoup2.4-dev
+  - libsqlcipher-dev
+  - libtoxcore-dev
+  - valac
+  # disable until https://github.com/naxuroqa/Venom/issues/497 is resolved
+  blacklisted: 'not compatible with recent valac'
+
+vmaf:
+  builddep: false
+  sourcedir: libvmaf
+
+weston:
+  install:
+  - libpipewire-0.2-dev
 
 wxformbuilder:
   builddep: false
   install:
-  - libwxgtk3.0-dev
-  - libwxgtk-media3.0-dev
+  - libwxgtk3.0-gtk3-dev
+  - libwxgtk-media3.0-gtk3-dev
+  # build produces so many warnings the job exceeds the maximum log length
+  build: false
 
 xi-gtk:
   builddep: false
   install:
-  - valac
   - libgtk-3-dev
   - libjson-glib-dev
+  - valac
 
 xorg:
   builddep: xorg-server
 
-zathura:
-  blacklisted: 'needs girara-gtk3 >= 0.3.2, not in bionic'
-
 zrythm:
-  builddep: false
   # zrythm.org only supports dumb http transport, which doesn't support shallow clones
   repo-url: https://github.com/zrythm/zrythm.git
+  builddep: false
   install:
+  - gettext
   - libfftw3-dev
   - libgtk-3-dev
+  - libjack-jackd2-dev
   - librubberband-dev
   - libsamplerate0-dev
   - libsndfile1-dev
@@ -709,7 +521,7 @@ zrythm:
   - xdg-utils
 
 zstandard:
-  builddep: zstd
+  # url in Users.md links to specific commit
   repo-url: https://github.com/facebook/zstd.git
-  sourcedir: contrib/meson
-  commit: v1.3.4
+  builddep: zstd
+  sourcedir: build/meson
