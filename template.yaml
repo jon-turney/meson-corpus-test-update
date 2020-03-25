@@ -27,4 +27,4 @@ before_script:
 
 script:
   - cat script
-  - docker run jturney/mesoncorpusci /bin/sh -c "$(cat script)"
+  - docker run --security-opt seccomp:unconfined jturney/mesoncorpusci /bin/sh -c "$(cat script)"
