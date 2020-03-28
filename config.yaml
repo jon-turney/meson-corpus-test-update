@@ -451,9 +451,27 @@ tizonia:
   - libboost-program-options-dev
   - libboost-python-dev
   - libboost-thread-dev
+  - libcurl4-gnutls-dev
+  - libdbus-1-dev
+  - libfaad-dev
+  - libfishsound1-dev
+  - libflac-dev
   - liblog4c-dev
+  - libmad0-dev
+  - libmediainfo-dev
+  - libmp3lame-dev
+  - libmpg123-dev
+  - liboggz2-dev
+  - libopus-dev
+  - libopusfile-dev
+  - libpulse-dev
+  - libsdl1.2-dev
+  - libsndfile1-dev
+  - libsqlite3-dev
+  - libtag1-dev
+  - libvpx-dev
   - uuid-dev
-  blacklisted: 'https://github.com/mesonbuild/meson/issues/6844'
+  config: -Dlibspotify=false
 
 valum:
   builddep: false
