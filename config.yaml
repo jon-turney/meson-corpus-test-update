@@ -472,6 +472,8 @@ tizonia:
   - libvpx-dev
   - uuid-dev
   config: -Dlibspotify=false
+  # build fails with "virtual memory exhausted"
+  build: false
 
 valum:
   builddep: false
