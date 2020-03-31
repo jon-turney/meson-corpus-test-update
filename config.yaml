@@ -529,6 +529,7 @@ zrythm:
   builddep: false
   install:
   - gettext
+  - guile-2.2-dev
   - libfftw3-dev
   - libgtk-3-dev
   - libjack-jackd2-dev
@@ -537,6 +538,7 @@ zrythm:
   - libsndfile1-dev
   - libyaml-dev
   - xdg-utils
+  commit: v0.8.200
 
 zstandard:
   # url in Users.md links to specific commit
