@@ -223,6 +223,7 @@ ish:
   - python-is-python3
 
 janet:
+  commit: v1.8.1
   builddep: false
 
 json:
