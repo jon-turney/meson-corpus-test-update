@@ -263,6 +263,7 @@ libcamera:
   repo-url: git://linuxtv.org/libcamera.git
   builddep: false
   install:
+  - gnutls-dev
   - python3-yaml
 
 libfuse:
@@ -476,6 +477,14 @@ tizonia:
   # build fails with "virtual memory exhausted"
   build: false
 
+vala-language-server:
+  builddep: false
+  install:
+  - libgee-0.8-dev
+  - libjsonrpc-glib-1.0-dev
+  - libvala-dev
+  - valac
+
 valum:
   builddep: false
   install:
@@ -525,6 +534,21 @@ xi-gtk:
 
 xorg:
   builddep: xorg-server
+
+x-test-suite:
+  builddep: false
+  install:
+  - libx11-dev
+  - libxaw7-dev
+  - libxext-dev
+  - libxi-dev
+  - libxmu-dev
+  - libxtst-dev
+  - x11-utils
+  - x11-xserver-utils
+  - xfonts-utils
+  # xts requires a running X server to build!
+  build: false
 
 zrythm:
   # zrythm.org only supports dumb http transport, which doesn't support shallow clones
