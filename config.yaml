@@ -106,6 +106,7 @@ fractal:
   repo-url: https://gitlab.gnome.org/World/fractal.git
   builddep: false
   install:
+  - appstream
   - cargo
   - gettext
   - libatk1.0-dev
@@ -248,7 +249,8 @@ knot-resolver:
   # commit before libknot >= 2.8 required, not in focal
   commit: 1bbe50b47cb41fd7459721fe08abea7cd2bf3888
   # uses submodules, but not as subprojects
-  extra-commands: git submodule update --init --recursive
+  # include commit 4157d3c298cbc264a63a85341dcad701c48c0655 to patch .gitmodules for deleted repositories
+  extra-commands: sed -i 's!https://github.com/cloudflare/!https://gitlab.labs.nic.cz/knot/3rdparty/!;s!https://github.com/telemachus/!https://gitlab.labs.nic.cz/knot/3rdparty/lua-!' .gitmodules ; git submodule update --init --recursive
 
 ksh:
   commit: ksh2020
@@ -263,6 +265,7 @@ libcamera:
   repo-url: git://linuxtv.org/libcamera.git
   builddep: false
   install:
+  - libboost-dev
   - gnutls-dev
   - python3-yaml
 
