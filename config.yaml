@@ -269,6 +269,9 @@ libcamera:
   - gnutls-dev
   - python3-yaml
 
+libeconf:
+  builddep: false
+
 libfuse:
   builddep: fuse
   install:
