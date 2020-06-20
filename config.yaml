@@ -435,6 +435,11 @@ sequeler:
   - libxml2-dev
   - valac
 
+siril:
+  install:
+  - cmake
+  - libexiv2-dev
+
 sshfs:
   install:
   - libfuse3-dev
