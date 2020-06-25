@@ -160,6 +160,7 @@ gnome-software:
 
 gnome-usage:
   install:
+  - libgirepository1.0-dev
   - libtracker-sparql-2.0-dev
 
 gnu-fribidi:
