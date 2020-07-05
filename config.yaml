@@ -447,6 +447,9 @@ sshfs:
   install:
   - libfuse3-dev
 
+sysprof:
+  commit: sysprof-3.36.0
+  
 sway:
   # needs aligned wlroots to build, but subproject isn't in repository
   build: false
