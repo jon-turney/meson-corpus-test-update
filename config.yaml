@@ -88,6 +88,11 @@ emeus:
   - libglib2.0-dev
   - libgtk-3-dev
 
+entangle:
+  repo-url: https://gitlab.com/entangle/entangle.git
+  install:
+  - appstream
+
 esp8266-arduino-sample-project:
   blacklisted: 'need to work out how to setup cross-env'
 
@@ -335,6 +340,11 @@ libui:
   install:
   - libgtk-3-dev
 
+libvirt:
+  repo-url: https://libvirt.org/git/libvirt.git
+  install:
+  - libtirpc-dev
+
 libzim:
   builddep: zimlib
   install:
@@ -392,6 +402,11 @@ ots:
 outlier:
   builddep: false
 
+owl-chess:
+  builddep: false
+  install:
+  - rustc
+
 pacman:
   repo-url: git://git.archlinux.org/pacman.git
   install:
@@ -402,6 +417,9 @@ pacman:
 
 pango:
   builddep: pango1.0
+
+paper-rock-scissors:
+  builddep: false
 
 parzip:
   builddep: false
@@ -425,8 +443,17 @@ pithos:
 qboot:
   builddep: false
 
+qemu:
+  repo-url: https://git.qemu.org/git/qemu.git
+  # hack to invoke the script which configures this
+  extra-commands: mkdir _build && cd _build && ../configure && cd ..
+  config: -v
+  build: false
+
 rxdock:
   builddep: false
+  # https://github.com/mesonbuild/eigen/pull/8
+  blacklisted: 'until wrap for libeigen is updated for new upstream loction'
 
 scrcpy:
   # fake scrcpy-server
