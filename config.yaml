@@ -139,6 +139,7 @@ geary:
   repo-url: https://git.gnome.org/browse/geary
   install:
   - libgsound-dev
+  commit: 3.36.3.1
 
 glib:
   builddep: glib2.0
@@ -153,6 +154,7 @@ glorytun:
 gnome-boxes:
   install:
   - libhandy-0.0-dev
+  - libgtksourceview-4-dev
 
 gnome-builder:
   # requires libportal, not packaged
@@ -169,6 +171,7 @@ gnome-usage:
   install:
   - libgirepository1.0-dev
   - libtracker-sparql-2.0-dev
+  commit: v3.37.1
 
 gnu-fribidi:
   builddep: fribidi
@@ -186,6 +189,7 @@ gtk+:
   install:
   - libgstreamer-plugins-bad1.0-dev
   - libgraphene-1.0-dev
+  - libvulkan-dev
 
 gtkdapp:
   builddep: false
@@ -378,6 +382,9 @@ miraclecast:
 mrsh:
   builddep: false
 
+nautilus:
+  commit: 3.37.3
+
 ocherbook:
   builddep: false
 
@@ -427,7 +434,7 @@ parzip:
 picolibc:
   builddep: false
   # hack to invoke the script which configures this
-  extra-commands: mkdir _build ; cd _build ; ../do-native-configure ; cd ..
+  extra-commands: mkdir _build && cd _build && ../scripts/do-native-configure && cd ..
   config: -v
 
 pipewire:
@@ -505,6 +512,8 @@ taisei-project:
   - python-docutils
   # uses submodules, but not as subprojects
   extra-commands: git submodule update --init --recursive
+  # master ftbs
+  commit: 324dccb79ae0033a1613c4b994ac97c813e516a6
 
 tizonia:
   builddep: false
@@ -545,6 +554,7 @@ vala-language-server:
   - libjsonrpc-glib-1.0-dev
   - libvala-dev
   - valac
+  commit: '0.48'
 
 valum:
   builddep: false
@@ -572,6 +582,8 @@ venom:
 
 vmaf:
   builddep: false
+  install:
+  - nasm
   sourcedir: libvmaf
 
 weston:
@@ -610,6 +622,9 @@ x-test-suite:
   - xfonts-utils
   # xts requires a running X server to build!
   build: false
+
+zathura:
+  commit: 0.4.7
 
 zrythm:
   # zrythm.org only supports dumb http transport, which doesn't support shallow clones
