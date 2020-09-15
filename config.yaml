@@ -155,6 +155,7 @@ gnome-boxes:
   install:
   - libhandy-0.0-dev
   - libgtksourceview-4-dev
+  commit: v3.38.0
 
 gnome-builder:
   # requires libportal, not packaged
