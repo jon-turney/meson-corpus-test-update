@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import subprocess
+import yaml
+
+import corpuslib
+
+parser = argparse.ArgumentParser('meson corpus test pin update tool')
+parser.add_argument('project', help='projects to update', metavar='PROJECT', nargs='*')
+
+args = parser.parse_args()
+
+projects = corpuslib.fetch_project_list()
+workdir = 'git-work'
+
+for p in projects:
+    if args.project and p.name not in args.project:
+        continue
+
+    print('Working on {}'.format(p.name))
+    repodir = os.path.join(workdir, p.name)
+    if not os.path.exists(repodir):
+        subprocess.check_call(['git','-C',workdir, 'clone','--depth=1',p.repo, p.name], stderr=subprocess.DEVNULL)
+    subprocess.check_call(['git', '-C', repodir, 'fetch', '--depth=1', '--tags'], stderr=subprocess.DEVNULL)
+
+    tag = subprocess.check_output(['git', '-C', repodir, 'for-each-ref', 'refs/tags', '--sort=-taggerdate', '--format=%(refname)', '--count=1'], encoding='ascii')
+    tag = tag.strip()
+    tag = tag.replace('refs/tags/', '')
+
+    print('Most recent tag: {}'.format(tag))
+    print('Currently pinned at: {}'.format(p.commit))
+
+#with open(os.path.join(scriptdir, "config.yaml.new"), 'w') as f:
+#    yaml.dump(projects, f)
