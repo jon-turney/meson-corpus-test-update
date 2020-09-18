@@ -48,10 +48,11 @@ cage:
 cozy:
   builddep: false
   install:
+  - gettext
   - libglib2.0-dev
   - python3-distro
-  - python3-peewee
   - python3-mutagen
+  - python3-peewee
 
 dav1d:
   builddep: false
@@ -460,8 +461,9 @@ qemu:
 
 rxdock:
   builddep: false
-  # https://github.com/mesonbuild/eigen/pull/8
-  blacklisted: 'until wrap for libeigen is updated for new upstream loction'
+  # update libeigen wrap for new location (unfortunately the archive is different)
+  # https://gitlab.com/rxdock/rxdock/-/merge_requests/2
+  extra-commands: sed -i 's!http://bitbucket.org/eigen/eigen/get/3.3.7.tar.bz2!https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.bz2!;s!eigen-eigen-323c052e1731!eigen-3.3.7!;s!9f13cf90dedbe3e52a19f43000d71fdf72e986beb9a5436dddcd61ff9d77a3ce!685adf14bd8e9c015b78097c1dc22f2f01343756f196acdc76a678e1ae352e11!;s!/1/!/3/!;s!-1-!-3-!;s!3d8ffc134e8af95e5de6c5d4614971028d27bf5f01f3082179522d536750261b!233bc7daeaf93c0284a6ec32009aabe2f5e001fd377a8c090a644697d51f2d25!' subprojects/eigen.wrap
 
 scrcpy:
   # fake scrcpy-server
