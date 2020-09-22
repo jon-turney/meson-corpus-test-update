@@ -518,6 +518,10 @@ taisei-project:
   # master ftbs
   commit: 324dccb79ae0033a1613c4b994ac97c813e516a6
 
+terminology:
+  install:
+  - libeet-bin
+
 tizonia:
   builddep: false
   install:
