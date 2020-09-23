@@ -113,6 +113,8 @@ foliate:
 fractal:
   repo-url: https://gitlab.gnome.org/World/fractal.git
   builddep: false
+  # tag before libhandy1 required, not in focal
+  commit: 4.4.0
   install:
   - appstream
   - cargo
