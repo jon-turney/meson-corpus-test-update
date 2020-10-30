@@ -77,6 +77,8 @@ dxvk:
   - g++-mingw-w64-x86-64
   config: --cross-file build-win64.txt
   extra-commands: update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix ; update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+  # master FTBFS
+  commit: v1.7.2
 
 elementary-os:
   blacklisted: 'is a distribution'
