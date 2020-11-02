@@ -419,6 +419,7 @@ owl-chess:
   builddep: false
   install:
   - rustc
+  blacklisted: 'repo-url not valid any more'
 
 pacman:
   repo-url: git://git.archlinux.org/pacman.git
