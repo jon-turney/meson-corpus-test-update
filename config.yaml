@@ -140,6 +140,10 @@ fractal:
 frida:
   blacklisted: 'repo-url is for frida-core, make a meson.build of frida using subprojects'
 
+fwupd:
+  install:
+  - libsystemd-dev
+
 geary:
   repo-url: https://git.gnome.org/browse/geary
   install:
@@ -294,6 +298,7 @@ libcamera:
   install:
   - libboost-dev
   - gnutls-dev
+  - python3-jinja2
   - python3-yaml
 
 libeconf:
