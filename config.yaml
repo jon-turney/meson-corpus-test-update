@@ -299,6 +299,7 @@ libcamera:
   - libboost-dev
   - gnutls-dev
   - python3-jinja2
+  - python3-ply
   - python3-yaml
 
 libeconf:
@@ -395,6 +396,9 @@ mrsh:
 
 nautilus:
   commit: 3.37.3
+
+nemo:
+  commit: 4.6.5
 
 ocherbook:
   builddep: false
