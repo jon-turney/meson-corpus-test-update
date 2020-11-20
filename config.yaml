@@ -143,6 +143,7 @@ frida:
 fwupd:
   install:
   - libsystemd-dev
+  - libcurl4-openssl-dev
 
 geary:
   repo-url: https://git.gnome.org/browse/geary
@@ -610,6 +611,9 @@ vmaf:
 weston:
   install:
   - libpipewire-0.2-dev
+
+wlroots:
+  commit: 0.12.0
 
 wxformbuilder:
   builddep: false
