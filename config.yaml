@@ -34,9 +34,13 @@ akira:
   - libjson-glib-dev
   - libxml2-dev
   - valac
+  commit: v0.0.13
 
 arduino-sample-project:
   blacklisted: 'need to work out how to setup cross-env'
+
+budgie-desktop:
+  commit: v10.5.2
 
 cage:
   builddep: false
@@ -44,6 +48,9 @@ cage:
   - libwlroots-dev
   # commit before wlroots >= 0.11.0 required, not in focal
   commit: 79992f39f3f451cac8140bc1053f57e2355c4f3c
+
+chicken-libraries:
+  blacklisted: 'this is an organization providing a collection of repos'
 
 cozy:
   builddep: false
@@ -53,6 +60,7 @@ cozy:
   - python3-distro
   - python3-mutagen
   - python3-peewee
+  commit: 0.7.5
 
 dav1d:
   builddep: false
@@ -68,15 +76,27 @@ dbus-broker:
   - python-docutils
   - systemd
 
+dosbox-staging:
+  builddep: false
+  install:
+  - libasound2-dev
+  - libfluidsynth-dev
+  - libopusfile-dev
+  - libpng-dev
+  - libsdl2-dev
+  - libsdl2-net-dev
+
 dpdk:
   repo-url: git://dpdk.org/dpdk
+  install:
+  - python3-pyelftools
 
 dxvk:
   install:
   - gcc-mingw-w64-x86-64
   - g++-mingw-w64-x86-64
   config: --cross-file build-win64.txt
-  extra-commands: update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix ; update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+  extra-commands: sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix ; sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
   # master FTBFS
   commit: v1.7.2
 
@@ -104,10 +124,12 @@ fedora-project:
 
 flecs:
   builddep: false
+  commit: v2.3.2
 
 foliate:
   builddep: false
   install:
+  - appstream
   - gettext
   - gjs
   - libglib2.0-dev-bin
@@ -168,8 +190,9 @@ gnome-boxes:
   commit: v3.38.0
 
 gnome-builder:
-  # requires libportal, not packaged
-  config: -Dplugin_update_manager=false
+  # update_manager requires libportal, not packaged
+  # custom clang11 install in GitHub runner image is missing the equivalent of libclang-11-dev
+  config: -Dplugin_update_manager=false -Dplugin_clang=false
   # tag before libdazzle-1.0 >= 3.37.0 required, not in focal
   commit: 3.36.0
   extra-commands: sed -i s!libide_lsp_sources,!libide_lsp_sources,libide_lsp_generated_headers,! src/libide/lsp/meson.build
@@ -177,6 +200,13 @@ gnome-builder:
 gnome-software:
   # requires libmalcontent, not packaged
   config: -Dmalcontent=false
+  install:
+  - libcurl4-openssl-dev
+  - libgirepository1.0-dev
+  - liblmdb-dev
+  - libstemmer-dev
+  - gperf
+  - libpam-dev
 
 gnome-usage:
   install:
@@ -233,6 +263,8 @@ helenos:
 
 igt:
   builddep: intel-gpu-tools
+  install:
+  - libasound2-dev
 
 inih:
   builddep: false
@@ -266,7 +298,7 @@ kiwix-libraries:
   - libzim-dev
   # tag before libzim >= 5.0.0 required, not in focal
   commit: 5.0.0
-  extra-commands: ln -s /usr/include/kainjow/mustache.hpp /usr/include
+  extra-commands: sudo ln -s /usr/include/kainjow/mustache.hpp /usr/include
 
 knot-resolver:
   # commit before libknot >= 2.8 required, not in focal
@@ -308,6 +340,7 @@ libeconf:
 
 libfuse:
   builddep: fuse
+  config: -Duseroot=false
   install:
   - udev
 
@@ -343,6 +376,8 @@ libmodulemd:
 
 libosmscout:
   builddep: false
+  # cairo demo FTBFS
+  config: -DenableMapCairo=false
 
 libratbag:
   install:
@@ -404,6 +439,9 @@ nemo:
 ocherbook:
   builddep: false
 
+oomd:
+  commit: v0.4.0
+
 openh264:
   builddep: false
   install:
@@ -425,12 +463,6 @@ ots:
 outlier:
   builddep: false
 
-owl-chess:
-  builddep: false
-  install:
-  - rustc
-  blacklisted: 'repo-url not valid any more'
-
 pacman:
   repo-url: git://git.archlinux.org/pacman.git
   install:
@@ -444,6 +476,8 @@ pango:
 
 paper-rock-scissors:
   builddep: false
+  install:
+  - gdc
 
 parzip:
   builddep: false
@@ -464,6 +498,9 @@ pithos:
   install:
   - libglib2.0-dev
 
+polari:
+  commit: 3.38.0
+
 qboot:
   builddep: false
 
@@ -473,6 +510,10 @@ qemu:
   extra-commands: mkdir _build && cd _build && ../configure && cd ..
   config: -v
   build: false
+
+rizin:
+  repo-url: https://github.com/rizinorg/rizin.git
+  builddep: false
 
 rxdock:
   builddep: false
@@ -502,6 +543,7 @@ siril:
   install:
   - cmake
   - libexiv2-dev
+  - libjson-glib-dev
 
 sshfs:
   install:
@@ -537,6 +579,10 @@ terminology:
   install:
   - libeet-bin
 
+tilix:
+  install:
+  - appstream
+
 tizonia:
   builddep: false
   install:
@@ -568,6 +614,9 @@ tizonia:
   config: -Dlibspotify=false
   # build fails with "virtual memory exhausted"
   build: false
+
+ufjf-mltk:
+  builddep: false
 
 vala-language-server:
   builddep: false
@@ -652,21 +701,23 @@ zathura:
   commit: 0.4.7
 
 zrythm:
-  # zrythm.org only supports dumb http transport, which doesn't support shallow clones
   repo-url: https://github.com/zrythm/zrythm.git
   builddep: false
   install:
+  - cmake
   - gettext
   - guile-2.2-dev
+  - help2man
   - libfftw3-dev
   - libgtk-3-dev
+  - libgtksourceview-3.0-dev
   - libjack-jackd2-dev
   - librubberband-dev
   - libsamplerate0-dev
   - libsndfile1-dev
   - libyaml-dev
+  - libzstd-dev
   - xdg-utils
-  commit: v0.8.200
 
 zstandard:
   # url in Users.md links to specific commit
