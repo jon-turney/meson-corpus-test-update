@@ -17,7 +17,7 @@ def fetch_project_list(skip_blacklisted=True):
 
     scriptdir = os.path.dirname(os.path.realpath(sys.argv[0]))
     with open(os.path.join(scriptdir, "config.yaml")) as f:
-        conf = yaml.load(f)
+        conf = yaml.load(f, Loader=yaml.Loader)
 
     #
     # fetch project list, extract projects

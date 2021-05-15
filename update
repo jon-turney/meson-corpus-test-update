@@ -34,7 +34,7 @@ projects = corpuslib.fetch_project_list()
 
 scriptdir = os.path.dirname(os.path.realpath(sys.argv[0]))
 with open(os.path.join(scriptdir, "template.yaml")) as f:
-    output = yaml.load(f)
+    output = yaml.load(f, Loader=yaml.Loader)
 
 matrix = [{'env': ['NAME=%s' % p.name, 'REPO=%s' % p.repo]
                    + (['MESON_COMMIT=%s' % args.commit] if args.commit else [])
