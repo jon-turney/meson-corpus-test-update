@@ -1,0 +1,92 @@
+name: corpus
+on:
+  push:
+  schedule:
+    # run daily at 1400 UTC
+    - cron: '0 14 * * *'
+  workflow_dispatch:
+    inputs:
+      meson_commit:
+        name: 'meson commit (default: master)'
+        required: false
+
+jobs:
+  corpus:
+    strategy:
+      matrix:
+      fail-fast: false
+
+    name: '${{ matrix.NAME }}'
+
+    runs-on: ubuntu-20.04
+
+    env:
+      NAME: ${{ matrix.NAME }}
+      REPO: ${{ matrix.REPO }}
+      BRANCH: ${{ matrix.BRANCH }}
+      COMMIT: ${{ matrix.COMMIT }}
+      BUILDDEP: ${{ matrix.BUILDDEP }}
+      ALSOINSTALL: ${{ matrix.ALSOINSTALL }}
+      SOURCEDIR: ${{ matrix.SOURCEDIR }}
+      BUILD: ${{ matrix.BUILD }}
+      HACKS: ${{ matrix.HACKS }}
+      CONFIG: ${{ matrix.CONFIG }}
+
+    steps:
+      - name: Build with meson
+        run: |-
+          sudo apt-get -y install ninja-build
+          sudo curl https://raw.githubusercontent.com/kadwanev/retry/master/retry -o /usr/local/bin/retry
+          sudo chmod +x /usr/local/bin/retry
+
+          sudo sed -i '/^#\sdeb-src /s/^#\s//' /etc/apt/sources.list
+          sudo apt-get -y update
+
+          if test -n "${BUILDDEP}"
+          then
+            sudo apt-get -y build-dep ${BUILDDEP}
+          fi
+
+          if test -n "${ALSOINSTALL}"
+          then
+            sudo apt-get -y install ${ALSOINSTALL}
+          fi
+
+          MESON_COMMIT=${{ github.event.inputs.meson_commit }}
+          if test -z "${MESON_COMMIT}"
+          then
+            retry -- pip3 install git+https://github.com/mesonbuild/meson.git
+          else
+            retry -- git clone https://github.com/mesonbuild/meson.git
+            retry -- git -C meson fetch origin ${MESON_COMMIT}
+            git -C meson checkout FETCH_HEAD
+            pip3 install ./meson
+          fi
+
+          if test -z "${COMMIT}"
+          then
+            retry -- git clone --depth=1 ${BRANCH} ${REPO} ${NAME}
+          else
+            retry -- git clone ${REPO} ${NAME}
+            git -C ${NAME} checkout ${COMMIT}
+          fi
+
+          cd ${NAME}
+          git rev-parse HEAD
+          git describe --dirty --always
+
+          eval ${HACKS}
+
+          meson _build ${SOURCEDIR} ${CONFIG}
+
+          if test -n "${BUILD}"
+          then
+             DESTDIR=${GITHUB_WORKSPACE}/install ninja -C _build ${BUILD}
+          fi
+
+      - name: Upload meson log
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.NAME }} meson log
+          path: ${{ matrix.NAME }}/_build/meson-logs/meson-log.txt

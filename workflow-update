@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+
+#
+# Construct a GitHub workflow .yml to run the git master of meson on the list of
+# projects
+#
+
+import argparse
+import os
+import sys
+from ruamel.yaml import YAML
+
+import corpuslib
+
+#
+# argument parsing
+#
+
+parser = argparse.ArgumentParser('meson corpus test updater tool')
+parser.add_argument('conf', help='configuration file', metavar='CONFFILE')
+parser.add_argument('yml', help='workflow .yml output file', metavar='WORKFLOWFILE')
+parser.add_argument('commit', help='meson commit to use', metavar='COMMIT', nargs='?')
+
+args = parser.parse_args()
+
+#
+# build projects list
+#
+
+projects = corpuslib.fetch_project_list()
+
+#
+# read workflow-template.yml and insert project list into build matrix
+#
+
+yaml = YAML()
+
+scriptdir = os.path.dirname(os.path.realpath(sys.argv[0]))
+with open(os.path.join(scriptdir, "workflow-template.yaml")) as f:
+    output = yaml.load(f)
+
+matrix = []
+for p in projects:
+    d = {'NAME': p.name, 'REPO': p.repo}
+    if args.commit:
+        d['MESON_COMMIT'] = args.commit
+    if p.branch:
+        d['BRANCH'] = p.branch
+    if p.commit:
+        d['COMMIT'] = p.commit
+    if p.builddep:
+        d['BUILDDEP'] = p.builddep
+    if p.alsoinstall:
+        d['ALSOINSTALL'] = ' '.join(p.alsoinstall)
+    if p.sourcedir:
+        d['SOURCEDIR'] = p.sourcedir
+    if p.build:
+        d['BUILD'] = p.build
+    if p.hacks:
+        d['HACKS'] = p.hacks
+    if p.config:
+        d['CONFIG'] = p.config
+    matrix.append(d)
+
+output['jobs']['corpus']['strategy']['matrix'] = {'include': matrix}
+
+yaml.default_flow_style = False
+yaml.width = 128
+
+with open(args.yml, 'w') as f:
+    yaml.dump(output, f)
