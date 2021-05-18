@@ -2,11 +2,9 @@
 
 Tools for testing a corpus of meson builds
 
-`update` writes a .travis.yml CI configuration
-
 `update-workflow` writes a GitHub workflow .yml CI configuration
 
-These scripts are intended to be used by `cronscript` to update the
+This script is intended to be used by `cronscript` to update the
 `meson-corpus-test` repository.
 
 `run` runs the test in local docker containers
