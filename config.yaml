@@ -617,6 +617,7 @@ tizonia:
 
 ufjf-mltk:
   builddep: false
+  commit: 22112321ba7ed6052c2021a47b57a866fdae4f0c
 
 vala-language-server:
   builddep: false
