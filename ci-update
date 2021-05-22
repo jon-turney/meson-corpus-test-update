@@ -11,6 +11,7 @@ fi
 git checkout ${PR:-master} >/dev/null 2>&1 || git checkout -b ${PR:-master}
 
 srcdir=`dirname "$0"`
+# ${srcdir}/most-recent-tag-update --auto
 ${srcdir}/workflow-update ${srcdir}/config.yaml .github/workflows/corpus.yml ${MESON_COMMIT}
 
 DATE=`date -u +%Y%m%d`

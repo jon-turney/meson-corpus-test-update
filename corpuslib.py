@@ -10,7 +10,7 @@ import sys
 import urllib.request
 import yaml
 
-def fetch_project_list(skip_blacklisted=True):
+def fetch_project_list(skip_blacklisted=True, use_mrts=True):
     #
     # read configuration file
     #
@@ -45,6 +45,17 @@ def fetch_project_list(skip_blacklisted=True):
                 urls[name] = url
 
     #
+    # read most-recent-tag file
+    #
+    mrt = {}
+    if use_mrts:
+        try:
+            with open(os.path.join(scriptdir, "most-recent-tag.yaml")) as f:
+                mrt = yaml.load(f, Loader=yaml.Loader)
+        except FileNotFoundError:
+            pass
+
+    #
     # build list of Project namedtuples
     # (each project might only be in either Users.md or config.yaml)
     #
@@ -69,6 +80,11 @@ def fetch_project_list(skip_blacklisted=True):
             # otherwise it's an explicit package name
 
             commit = c.get('commit', None)
+
+            # if commit isn't configured, look for most-recent-tag
+            if commit is None:
+                commit = mrt.get(name, None)
+
             if commit:
                 if re.match(r'^[0-9a-fA-F]*$', commit):
                     # looks like a hash

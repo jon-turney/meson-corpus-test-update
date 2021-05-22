@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import subprocess
+import sys
+import yaml
+
+import corpuslib
+
+parser = argparse.ArgumentParser('meson corpus test most-recent-tag database update tool')
+parser.add_argument('project', help='projects to update', metavar='PROJECT', nargs='*')
+parser.add_argument('--auto', action='store_true', help='automatically add most-recent-tag')
+parser.add_argument('--update', action='store_true', help='update most-recent-tag')
+
+args = parser.parse_args()
+
+projects = corpuslib.fetch_project_list(use_mrts=False)
+workdir = '.mrt-work'
+os.makedirs(workdir, exist_ok=True)
+mrt = {}
+modified = False
+
+# setting HOME to somewhere invalid prevents git from reading ~/.gitconfig
+env = os.environ
+env['HOME'] = '/dev/null'
+
+scriptdir = os.path.dirname(os.path.realpath(sys.argv[0]))
+try:
+    with open(os.path.join(scriptdir, "most-recent-tag.yaml")) as f:
+        mrt = yaml.load(f, Loader=yaml.Loader)
+except FileNotFoundError:
+    pass
+
+for p in projects:
+    if args.project and p.name not in args.project:
+        continue
+
+    if p.commit:
+        continue
+
+    if p.name in mrt and not args.update:
+        continue
+
+    repodir = os.path.join(workdir, p.name)
+    if not os.path.exists(repodir):
+        subprocess.check_call(['git','-C',workdir, 'clone', '--bare', '--depth=1', p.repo, p.name], env=env)
+
+    subprocess.check_call(['git', '-C', repodir, 'remote', 'set-url', 'origin', p.repo], env=env)
+    subprocess.check_call(['git', '-C', repodir, 'fetch', '--depth=1', '--tags', '--prune', '--force', '--quiet'], env=env)
+
+    tag = subprocess.check_output(['git', '-C', repodir, 'for-each-ref', 'refs/tags', '--sort=-creatordate', '--format=%(refname)', '--count=1'], env=env, encoding='ascii')
+
+    tag = tag.strip()
+    tag = tag.replace('refs/tags/', '')
+
+    # print('{}: most recent tag: {}, config pin: {}, mrt: {}'.format(p.name, tag, p.commit, mrt.get(p.name, None)))
+
+    if args.auto or args.update:
+        if tag:
+            if mrt.get(p.name, None) != tag:
+                print('{}: most-recent-tag updated to {}'.format(p.name, tag))
+                mrt[p.name] = tag
+                modified = True
+        else:
+            print('{}: no most-recent-tag found'.format(p.name))
+
+    if tag == p.commit:
+        print('{}: redundant explicit configuration of {}, the most-recent-tag'.format(p.name, p.commit))
+
+if modified:
+    with open(os.path.join(scriptdir, "most-recent-tag.yaml"), 'w') as f:
+        yaml.dump(mrt, f)
