@@ -344,6 +344,12 @@ libfuse:
   install:
   - udev
 
+libgit2-glib:
+  # pin before version requiring glib 2.68, not in focal
+  commit: 'v0.99.0.1'
+  # don't install to work-around bogus DESTDIR handling in custom install script
+  build: all
+
 libhttpseverywhere:
   builddep: false
   install:
