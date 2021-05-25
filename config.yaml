@@ -197,6 +197,9 @@ gnome-builder:
   commit: 3.36.0
   extra-commands: sed -i s!libide_lsp_sources,!libide_lsp_sources,libide_lsp_generated_headers,! src/libide/lsp/meson.build
 
+gnome-mpv:
+  repo-url: https://github.com/celluloid-player/celluloid.git
+
 gnome-software:
   # requires libmalcontent, not packaged
   config: -Dmalcontent=false
