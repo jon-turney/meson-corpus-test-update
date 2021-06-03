@@ -514,7 +514,7 @@ qboot:
   builddep: false
 
 qemu:
-  repo-url: https://git.qemu.org/git/qemu.git
+  repo-url: https://gitlab.com/qemu-project/qemu
   # hack to invoke the script which configures this
   extra-commands: mkdir _build && cd _build && ../configure && cd ..
   config: -v
