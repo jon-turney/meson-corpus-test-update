@@ -234,6 +234,7 @@ gtk+:
   - libgstreamer-plugins-bad1.0-dev
   - libgraphene-1.0-dev
   - libvulkan-dev
+  extra-commands: sed -i s!master!main! subprojects/glib.wrap
 
 gtkdapp:
   builddep: false
