@@ -31,25 +31,28 @@ jobs:
       BUILD: ${{ matrix.BUILD }}
       HACKS: ${{ matrix.HACKS }}
       CONFIG: ${{ matrix.CONFIG }}
+      DEBIAN_FRONTEND: noninteractive
 
     steps:
       - name: Build with meson
         run: |-
-          sudo apt-get -y install ninja-build
-          sudo curl https://raw.githubusercontent.com/kadwanev/retry/master/retry -o /usr/local/bin/retry
+          sudo apt-get -y install moreutils ninja-build >/dev/null
+          sudo curl -sS https://raw.githubusercontent.com/kadwanev/retry/master/retry -o /usr/local/bin/retry
           sudo chmod +x /usr/local/bin/retry
 
           sudo sed -i '/^#\sdeb-src /s/^#\s//' /etc/apt/sources.list
-          sudo apt-get -y update
+          sudo chronic apt-get -y update
+
+          git config --global advice.detachedHead false
 
           if test -n "${BUILDDEP}"
           then
-            sudo apt-get -y build-dep ${BUILDDEP}
+            sudo chronic apt-get -y build-dep ${BUILDDEP}
           fi
 
           if test -n "${ALSOINSTALL}"
           then
-            sudo apt-get -y install ${ALSOINSTALL}
+            sudo chronic apt-get -y install ${ALSOINSTALL}
           fi
 
           MESON_COMMIT=${{ github.event.inputs.meson_commit }}
