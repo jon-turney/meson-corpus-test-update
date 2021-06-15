@@ -58,6 +58,7 @@ cozy:
   - gettext
   - libglib2.0-dev
   - python3-distro
+  - python3-gi
   - python3-mutagen
   - python3-peewee
   commit: 0.7.5
@@ -96,7 +97,7 @@ dxvk:
   - gcc-mingw-w64-x86-64
   - g++-mingw-w64-x86-64
   config: --cross-file build-win64.txt
-  extra-commands: sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix ; sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+  extra-commands: update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix ; update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
   # master FTBFS
   commit: v1.7.2
 
@@ -302,7 +303,7 @@ kiwix-libraries:
   - libzim-dev
   # tag before libzim >= 5.0.0 required, not in focal
   commit: 5.0.0
-  extra-commands: sudo ln -s /usr/include/kainjow/mustache.hpp /usr/include
+  extra-commands: ln -s /usr/include/kainjow/mustache.hpp /usr/include
 
 knot-resolver:
   # commit before libknot >= 2.8 required, not in focal
@@ -382,10 +383,13 @@ libmodulemd:
   - libzstd-dev
   - pycodestyle
   - python3-autopep8
+  - python3-gi
   - valgrind
 
 libosmscout:
   builddep: false
+  install:
+  - libxml2-dev
   # cairo demo FTBFS
   config: -DenableMapCairo=false
 
@@ -492,6 +496,10 @@ paper-rock-scissors:
 parzip:
   builddep: false
 
+peek:
+  install:
+  - python-is-python3
+
 picolibc:
   builddep: false
   # hack to invoke the script which configures this
@@ -561,6 +569,10 @@ sshfs:
 
 sysprof:
   commit: sysprof-3.36.0
+
+systemd:
+  install:
+  - python3-jinja2
 
 sway:
   # needs aligned wlroots to build, but subproject isn't in repository

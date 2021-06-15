@@ -19,6 +19,9 @@ jobs:
     name: '${{ matrix.NAME }}'
 
     runs-on: ubuntu-20.04
+    # use an offical ubuntu docker image as a container so we are isolated from
+    # the tool updates github puts into it's VM images
+    container: ubuntu:focal
 
     env:
       NAME: ${{ matrix.NAME }}
@@ -36,34 +39,34 @@ jobs:
     steps:
       - name: Build with meson
         run: |-
-          sudo apt-get -y install moreutils ninja-build >/dev/null
-          sudo curl -sS https://raw.githubusercontent.com/kadwanev/retry/master/retry -o /usr/local/bin/retry
-          sudo chmod +x /usr/local/bin/retry
+          sed -i '/^#\sdeb-src /s/^#\s//' /etc/apt/sources.list
+          apt-get -y update >/dev/null
 
-          sudo sed -i '/^#\sdeb-src /s/^#\s//' /etc/apt/sources.list
-          sudo chronic apt-get -y update
+          apt-get -y install build-essential curl git moreutils ninja-build pkg-config python3-pip >/dev/null
+          curl -sS https://raw.githubusercontent.com/kadwanev/retry/master/retry -o /usr/local/bin/retry
+          chmod +x /usr/local/bin/retry
 
           git config --global advice.detachedHead false
 
           if test -n "${BUILDDEP}"
           then
-            sudo chronic apt-get -y build-dep ${BUILDDEP}
+            chronic apt-get -y build-dep ${BUILDDEP}
           fi
 
           if test -n "${ALSOINSTALL}"
           then
-            sudo chronic apt-get -y install ${ALSOINSTALL}
+            chronic apt-get -y install ${ALSOINSTALL}
           fi
 
           MESON_COMMIT=${{ github.event.inputs.meson_commit }}
           if test -z "${MESON_COMMIT}"
           then
-            retry -- pip3 install git+https://github.com/mesonbuild/meson.git
+            retry -- pip3 --no-cache-dir install git+https://github.com/mesonbuild/meson.git
           else
             retry -- git clone https://github.com/mesonbuild/meson.git
             retry -- git -C meson fetch origin ${MESON_COMMIT}
             git -C meson checkout FETCH_HEAD
-            pip3 install ./meson
+            pip3 --no-cache-dir install ./meson
           fi
 
           if test -z "${COMMIT}"
