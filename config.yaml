@@ -49,6 +49,9 @@ cage:
   # commit before wlroots >= 0.11.0 required, not in focal
   commit: 79992f39f3f451cac8140bc1053f57e2355c4f3c
 
+canfigger:
+  builddep: false
+
 chicken-libraries:
   blacklisted: 'this is an organization providing a collection of repos'
 
