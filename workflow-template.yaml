@@ -35,6 +35,8 @@ jobs:
       HACKS: ${{ matrix.HACKS }}
       CONFIG: ${{ matrix.CONFIG }}
       DEBIAN_FRONTEND: noninteractive
+      PYTHON_UNBUFFERED: 1
+      MESON_FORCE_BACKTRACE: 1
 
     steps:
       - name: Build with meson
