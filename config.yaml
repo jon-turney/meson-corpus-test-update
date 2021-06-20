@@ -399,7 +399,6 @@ libosmscout:
 libratbag:
   install:
   - valgrind
-  blacklisted: 'https://github.com/mesonbuild/meson/issues/6845'
 
 libspng:
   builddep: false
