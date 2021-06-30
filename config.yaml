@@ -535,6 +535,13 @@ rizin:
   repo-url: https://github.com/rizinorg/rizin.git
   builddep: false
 
+rmw:
+  repo-url: https://github.com/theimpossibleastronaut/rmw.git
+  builddep: false
+  install:
+  - gettext
+  - libncurses-dev
+
 rxdock:
   builddep: false
   # update libeigen wrap for new location (unfortunately the archive is different)
